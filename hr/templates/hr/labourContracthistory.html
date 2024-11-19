@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 40px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+
+        .heading{
+            font-size:15px;
+            text-align:start;
+          }
+        .navbar-heading {
+            font-size:15px;
+            margin-left: 20px;
+        }
+
+        .nav-right, .nav-left {
+            position: relative;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .no-data {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            padding-top: 60px;
+        }
+
+        .popup-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+
+        .history-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+        }
+
+        hr.solid {
+            border-top: 3px solid #bbb;
+            margin-top: 30px;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        .edit-btn, .delete-btn {
+            cursor: pointer;
+            color: #007bff;
+            font-size: 16px;
+            position: absolute;
+            top: 10px;
+        }
+
+        .edit-btn {
+            left: 10px;
+        }
+
+        .delete-btn {
+            left: 50px;
+        }
+
+        .edit-btn:hover, .delete-btn:hover {
+            color: #0056b3;
+        }
+
+        .container {
+            height: 100%;
+            min-width: 50%;
+            background-color: white;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .icons {
+            margin-left: 30px;
+            color: black;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .heading {
+            font-size: 15px;
+            text-align: start;
+        }
+
+        table-heading {
+            font-size: 13px;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="backbtn" onclick="navigateBack()"><i class="fas fa-arrow-left"></i></button>
+            <h2 class="navbar-heading">Labour Contract</h2>
+        </div>
+    </nav>
+
+    <h1 class="heading">History</h1>
+    <table id="history-table">
+        <thead classs="table-heading">
+            <tr>
+                <th>Employee Name</th>
+                <th>Employee ID</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <div id="no-data" class="no-data">No data available. Please fill in the details on the Labour Contract Page.</div>
+
+    <!-- Popup to show full details -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <div class="history-container">
+                <i class="fas fa-pencil-alt edit-btn" onclick="editDetails()"></i>
+                <i class="fas fa-trash-alt delete-btn" onclick="deleteDetails()"></i>
+            </div>
+            <hr class="solid">
+            <div id="popup-details">
+                <!-- Details will be filled dynamically -->
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        let labourcontractList = [];
+let currentIndex = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const authToken = getAuthToken();
+    if (authToken) {
+        fetchLabourContracthistory(authToken);
+    } else {
+        console.error('Authentication token not found.');
+        document.getElementById('no-data').style.display = 'block';
+    }
+});
+
+function getAuthToken() {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'auth_token') {
+            return decodeURIComponent(value);
+        }
+    }
+    return null;
+}
+
+function fetchLabourContracthistory(authToken) {
+    axios.get('http://127.0.0.1:8000/hr/api/labour-contract-get', {
+        headers: {
+            Authorization: `Bearer ${authToken}`
+        }
+    })
+    .then(response => {
+        labourcontractList = response.data;
+        displayLabourContracthistory(labourcontractList);
+    })
+    .catch(error => {
+        console.error('Error fetching labour contract history:', error);
+        document.getElementById('no-data').style.display = 'block';
+    });
+}
+
+function displayLabourContracthistory(labourcontractList) {
+    const historyTableBody = document.querySelector('#history-table tbody');
+    const noDataDiv = document.getElementById('no-data');
+
+    if (labourcontractList.length === 0) {
+        noDataDiv.style.display = 'block';
+        historyTableBody.innerHTML = '';
+    } else {
+        noDataDiv.style.display = 'none';
+        historyTableBody.innerHTML = '';
+        labourcontractList.forEach((details, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${details.username}</td>
+                <td>${details.emp_id}</td>
+                <td>${details.status}</td>
+                <td>
+                    <i class="far fa-eye view-btn" onclick="viewDetails(${details.id})"></i>
+                </td>
+            `;
+            historyTableBody.appendChild(row);
+        });
+    }
+}
+
+function viewDetails(id) {
+    const details = labourcontractList.find(details => details.id === id);
+    currentIndex = id;
+
+    const popup = document.getElementById('popup');
+    const popupDetails = document.getElementById('popup-details');
+
+    popupDetails.innerHTML = `
+        <p><strong>Employee Name:</strong> ${details.username}</p>
+        <p><strong>Employee ID:</strong> ${details.emp_id}</p>
+        <p><strong>Email:</strong> ${details.email}</p>
+        <p><strong>Business Group:</strong> ${details.group}</p>
+        <p><strong>Department:</strong> ${details.department}</p>
+        <p><strong>Reason:</strong> ${details.reason}</p>
+        <p><strong>Amendment Date:</strong> ${details.amendment_date}</p>
+        <p><strong>Comments:</strong> ${details.comments}</p>
+    `;
+    
+
+
+    const editBtn = document.querySelector('.edit-btn');
+            const deleteBtn = document.querySelector('.delete-btn');
+
+            if (details.status === 'confirmed' || details.status === 'approved' || details.status === 'rejected') {
+                editBtn.style.color = 'red';
+                deleteBtn.style.color = 'red';
+                editBtn.style.pointerEvents = 'none';
+                deleteBtn.style.pointerEvents = 'none';
+            } else {
+                editBtn.style.color = '#007bff';
+                deleteBtn.style.color = '#007bff';
+                editBtn.style.pointerEvents = 'auto';
+                deleteBtn.style.pointerEvents = 'auto';
+            }
+
+            popup.style.display = 'block';
+}
+
+function closePopup() {
+    const popup = document.getElementById('popup');
+    popup.style.display = 'none';
+}
+
+function editDetails() {
+    const details = labourcontractList.find(item => item.id === currentIndex);
+
+    axios.get(`http://127.0.0.1:8000/hr/api/labour-contract-get/${details.id}`, {
+        headers: {
+            Authorization: `Bearer ${getAuthToken()}`
+        }
+    })
+    .then(response => {
+        const labourcontract  = response.data;
+
+        // Redirect to the edit page with query parameters
+        const queryString = Object.keys(labourcontract).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(labourcontract[key])}`).join('&');
+        window.location.href = `/hr/LabourContract/labourContractupdate?${queryString}`;
+    })
+    .catch(error => {
+        console.error('Error fetching bank details for editing:', error.response.data);
+        alert('An error occurred while fetching bank details for editing.');
+    });
+}
+
+
+function deleteDetails() {
+    const details = labourcontractList.find(item => item.id === currentIndex);
+    if (details) {
+        if (confirm('Are you sure you want to delete this record?')) {
+            axios.delete(`http://127.0.0.1:8000/hr/api/labour-contract-delete/${details.id}`, {
+                headers: {
+                    Authorization: `Bearer ${getAuthToken()}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    showSnackbar('Labour contract saved successfully', 'green');
+                } else {
+                    showSnackbar('Failed to save labour contract details', 'red');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting record:', error);
+                showSnackbar('An error occurred while deleting the record.');
+            });
+        }
+    } 
+}
+
+function navigateBack() {
+    window.history.back();
+}
+    
+    </script>
+</body>
+</html>

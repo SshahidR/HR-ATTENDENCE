@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Management Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            
+           
+        }
+   
+
+        h1 {
+            text-align: start;
+            font-size:15px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+
+        
+        .navbar-heading {
+            font-size:15px;
+            margin-left: 20px;
+        }
+
+        .nav-right, .nav-left {
+            position: relative;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            top: -5px;
+            right: 35px;
+            background-color: #555;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            z-index: 1;
+            font-size: 12px;
+        }
+
+        .nav-right:hover .tooltip {
+            display: block;
+        }
+
+        .input-field, .select-field {
+           width: 100%;
+           padding: 10px 10px 10px 40px;
+           border: 1px solid #ccc;
+           border-radius: 4px;
+           box-sizing: border-box;
+           color: black;
+       }
+
+       .select-field {
+           appearance: none;
+           -webkit-appearance: none;
+           -moz-appearance: none;
+           background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>') no-repeat right 10px center;
+           background-size: 12px;
+       }
+
+       .input-field::placeholder {
+           color: black;
+       }
+       .icon {
+            position: absolute;
+            left: 10px;
+            top: 38px; /* Adjust this value as needed */
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            position: absolute;
+            bottom: -20px; /* Adjust this value as needed */
+            left: 0;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 0.5rem; /* Increase this value to accommodate the error message */
+        }
+        .input-field.error, .select-field.error {
+           border-color: red;
+        }
+
+        .icon i {
+            color: black;
+            font-size: 14px;
+        }
+
+        .label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size:12px;
+
+        }
+
+        .save-button {
+            width: 20%;
+            padding: 10px;
+            border: none;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            
+            margin-bottom: 20px;
+        }
+
+        .form-label{
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+           }
+           .form-control{
+            font-size: 13px;
+           }
+           .form-select{
+            font-size: 13px;
+            }
+            .mb {
+                margin-bottom: 0.1rem !important;
+            }
+
+        #snackbar {
+            visibility: hidden; 
+            width: 350px; 
+            height:50px;
+            margin-left: -125px; 
+            background-color: green;
+            color: white; 
+            text-align: center; 
+            border-radius: 2px; 
+            padding: 16px; 
+            position: fixed; 
+            z-index: 1;
+            left: 50%; 
+            bottom: 30px; 
+          }
+
+          #snackbar.error {
+            background-color: #f44336; /* Red background for errors */
+            color: white;
+        }
+          
+         #snackbar.show {
+            visibility: visible;
+            
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+          }
+          
+           @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+          }
+          
+          @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+          }
+          
+          @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+          }
+          
+          @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+          }
+          .container{
+            height:100%;
+            width:50%;
+            background-color:white;
+            margin:20px;
+            padding:20px;
+          
+          }
+          .heading{
+            font-size: 25px;
+            text-align:start;
+            font-weight:bold;
+            padding:10px;
+          }
+          #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar bg-dark text-white">
+            <div class="container-fluid">
+                <div class="nav-left">
+                    <h2 class="navbar-heading">Document For Passport</h2>
+                </div>
+                <div class="nav-right">
+                    <div class="dropdown">
+                        <button class="btn btn-link text-white" class="dropbtn" onclick="navigateToHistory()">⋮</button>
+                        <span class="tooltip">History</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <h1 class="heading">Document For Passport</h1>
+        <form id="passport-form" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+        
+         
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Employee Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            <input type="text" id="username" placeholder="Employee Name" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Employee ID</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                            <input type="text" id="emp_id" placeholder="Employee ID" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div> 
+                <div class="col">    
+                    <div class="mb">
+                        <label class="form-label">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                            <input type="text" id="email" placeholder="Email" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">    
+                    <div class="mb">
+                        <label class="form-label">Department</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                            <input type="text" id="department" placeholder="Department" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Business Group</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-building"></i></span>
+                            <input type="text" id="group" placeholder="Business Group" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">    
+                    <div class="mb">
+                        <label class="form-label">Country Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                            <input type="text" id="Passport_country_name" list="country" placeholder="Search Country Name" class="form-control">
+                            <datalist id="country">
+                                <option value="" selected disabled hidden>Select Country Issue</option>
+                                <option value="Afghanistan">Afghanistan</option>
+                                 <option value="Algeria">Algeria</option>
+                                 <option value="Bahrain">Bahrain</option>
+                                 <option value="Bangladesh">Bangladesh</option>
+                                 <option value="Bhutan">Bhutan</option>
+                                 <option value="Burma Union Myanmar">Burma Union Myanmar</option>
+                                 <option value="China">China</option>
+                                 <option value="Djibouti">Djibouti</option>
+                                 <option value="Egypt">Egypt</option>
+                                 <option value="Hong Kong">Hong Kong</option>
+                                 <option value="India">India</option>
+                                 <option value="Indonesia">Indonesia</option>
+                                 <option value="Iran">Iran</option>
+                                 <option value="Iraq">Iraq</option>
+                                 <option value="Japan">Japan</option>
+                                 <option value="Jordan">Jordan</option>
+                                 <option value="Kampuchea">Kampuchea</option>
+                                 <option value="Kuwait">Kuwait</option>
+                                 <option value="Lebanon">Lebanon</option>
+                                 <option value="Libya">Libya</option>
+                                 <option value="Malaysia">Malaysia</option>
+                                 <option value="Mauritania">Mauritania</option>
+                                 <option value="Morocco">Morocco</option>
+                                 <option value="Nepal">Nepal</option>
+                                 <option value="North Korea">North Korea</option>
+                                 <option value="Pakistan">Pakistan</option>
+                                 <option value="Palestine">Palestine</option>
+                                 <option value="Philippines">Philippines</option>
+                                 <option value="Qatar">Qatar</option>
+                                 <option value="Saudi Arabia">Saudi Arabia</option>
+                                 <option value="Singapore">Singapore</option>
+                                 <option value="Somalia">Somalia</option>
+                                 <option value="South Korea">South Korea</option>
+                                 <option value="Sri Lanka">Sri Lanka</option>
+                                 <option value="Sudan">Sudan</option>
+                                 <option value="Sultanate Of Oman">Sultanate Of Oman</option>
+                                 <option value="Syria">Syria</option>
+                                 <option value="Taiwan">Taiwan</option>
+                                 <option value="Thailand">Thailand</option>
+                                 <option value="Tunisia">Tunisia</option>
+                                 <option value="United Arab Emirates">United Arab Emirates</option>
+                                 <option value="Vietnam">Vietnam</option>
+                                 <option value="Yemen">Yemen</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">    
+                    <div class="mb"> 
+                        <label class="form-label">Document Type</label>  
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-file"></i></span>
+                            <input type="text" id="Passport_document_type" list="Document_Type" placeholder="Select Document Type" class="form-control">
+                            <datalist id="Document_Type">
+                                <option value="AE_PASSPORT">AE_PASSPORT</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">    
+                    <div class="mb">
+                        <label class="form-label">Category</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-table-list"></i></span>
+                            <input type="text" id="Passport_category" placeholder="Category" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">    
+                    <div class="mb">
+                        <label class="form-label">Sub Category</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-table-list"></i></span>
+                            <input type="text" id="Passport_sub_category" placeholder="Sub Category" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">    
+                    <div class="mb">
+                        <label class="form-label">Document Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-regular fa-file"></i></span>
+                            <input type="text" id="Passport_document_number" placeholder="Document Number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">    
+                    <div class="mb">
+                        <label class="form-label">Issued By</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-user-tie"></i></span>
+                            <input type="text" id="Passport_issued_by" placeholder="Issued By" class="form-control">
+                        </div>
+                    </div>
+                </div>  
+               <div class="col">       
+                    <div class="mb">
+                        <label class="form-label">Issued At</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-check"></i></span>
+                            <input type="text" id="Passport_issued_at" placeholder="Issued At" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Issued Date</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            <input type="date" id="Passport_issued_date" class="form-control" pattern="\d{4}-\d{2}-\d{2}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Issuing Authority</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-sitemap"></i></span>
+                            <input type="text" id="Passport_issuing_authority" placeholder="Name of organization" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+                    <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Valid From</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar-days"></i></span>
+                            <input type="date" id="Passport_valid_from" class="form-control" pattern="\d{4}-\d{2}-\d{2}">
+                        </div>
+                    </div>
+                </div>
+                    <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Valid To</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar-days"></i></span>
+                            <input type="date" id="Passport_valid_to" class="form-control" pattern="\d{4}-\d{2}-\d{2}">
+                        </div>
+                    </div>
+                </div>
+                    <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Verified By</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-square-check"></i></span>
+                            <input type="text" id="Passport_verified_by" placeholder="Name of Person or Department" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                    <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Verified Date</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar-week"></i></span>
+                            <input type="date" id="Passport_verified_date" class="form-control" pattern="\d{4}-\d{2}-\d{2}">
+                        </div>
+                    </div>
+                </div>
+                    <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Passport Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-passport"></i></span>
+                            <input type="text" id="passport_number" placeholder="Passport Number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                    <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Passport Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-square-pen"></i></span>
+                            <input type="text" id="passport_type" list="Passport_Types" placeholder="Select Passport Type" class="form-control">
+                            <datalist id="Passport_Types">
+                                <option value="" selected disabled hidden>Select Visa Type</option>
+                                <option value="Family Visa">Family Visa</option>
+                                <option value="Residence Permit">Residence Permit</option>
+                                <option value="Visit Visa">Visit Visa</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Country of Issue</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                            <input type="text" id="country_of_issue" list="country_issues" placeholder="Select Country Issue" class="form-control">
+                            <datalist id="country_issues">
+                                <option value="" selected disabled hidden>Select Country Issue</option>
+                                <option value="Afghanistan">Afghanistan</option>
+                                <option value="Algeria">Algeria</option>
+                                <option value="Bahrain">Bahrain</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="Bhutan">Bhutan</option>
+                                <option value="Burma Union Myanmar">Burma Union Myanmar</option>
+                                <option value="China">China</option>
+                                <option value="Djibouti">Djibouti</option>
+                                <option value="Egypt">Egypt</option>
+                                <option value="Hong Kong">Hong Kong</option>
+                                <option value="India">India</option>
+                                <option value="Indonesia">Indonesia</option>
+                                <option value="Iran">Iran</option>
+                                <option value="Iraq">Iraq</option>
+                                <option value="Japan">Japan</option>
+                                <option value="Jordan">Jordan</option>
+                                <option value="Kampuchea">Kampuchea</option>
+                                <option value="Kuwait">Kuwait</option>
+                                <option value="Lebanon">Lebanon</option>
+                                <option value="Libya">Libya</option>
+                                <option value="Malaysia">Malaysia</option>
+                                <option value="Mauritania">Mauritania</option>
+                                <option value="Morocco">Morocco</option>
+                                <option value="Nepal">Nepal</option>
+                                <option value="North Korea">North Korea</option>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="Palestine">Palestine</option>
+                                <option value="Philippines">Philippines</option>
+                                <option value="Qatar">Qatar</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                <option value="Singapore">Singapore</option>
+                                <option value="Somalia">Somalia</option>
+                                <option value="South Korea">South Korea</option>
+                                <option value="Sri Lanka">Sri Lanka</option>
+                                <option value="Sudan">Sudan</option>
+                                <option value="Sultanate Of Oman">Sultanate Of Oman</option>
+                                <option value="Syria">Syria</option>
+                                <option value="Taiwan">Taiwan</option>
+                                <option value="Thailand">Thailand</option>
+                                <option value="Tunisia">Tunisia</option>
+                                <option value="United Arab Emirates">United Arab Emirates</option>
+                                <option value="Vietnam">Vietnam</option>
+                                <option value="Yemen">Yemen</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Place of Issue</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span>
+                            <input type="text" id="place_of_issue" placeholder="Place of Issue" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                    <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Number of Accompanying Person</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-users"></i></span>
+                            <input type="number" id="number_of_accompanying_person" placeholder="Number of Accompanying Person" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                    <div class="col"> 
+                    
+                    <div class="mb">
+                        <label class="form-label">Previous Passport Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-history"></i></span>
+                            <input type="text" id="previous_passport_number" placeholder="Previous Passport Number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+        
+            <div class="row mt-3">
+                <div class="col-12 text-center">
+                    <button type="submit" class="save-button">Apply</button>
+                </div>
+            </div>
+            <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="your-csrf-token-here">
+        </form>
+        <div id="snackbar">Application Sent Successfully</div>
+        <div id="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            function getAuthToken() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'auth_token') {
+                        return decodeURIComponent(value);
+                    }
+                }
+                return null;
+            }
+            const authToken = getAuthToken();
+            const apiBaseUrl = 'http://127.0.0.1:8000';
+            console.log("Authentication Token:", authToken);
+
+
+
+            function showSnackbar(message, type = 'success', duration = 3000) {
+                const snackbar = document.getElementById("snackbar");
+                snackbar.textContent = message;
+                snackbar.className = "show";
+                if (type === 'error') {
+                    snackbar.classList.add("error");
+                } else {
+                    snackbar.classList.remove("error");
+                }
+                setTimeout(function() {
+                    snackbar.className = snackbar.className.replace("show", "");
+                }, duration);
+            }
+
+            // Configure toastr options
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            async function sendAdminNotification(email) {
+                try {
+                    const csrftoken = document.getElementById('csrf_token').value;
+                    
+                    const response = await fetch('http://127.0.0.1:8000/hr/api/send_admin_notification', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                            'Authorization': `Bearer ${authToken}`,
+                        },
+                        body: JSON.stringify({
+                            subject: 'DocumentForPassport Application request',
+                            message: `DocumentForPassport Application request by Employee with email ${email}.`,
+                            recipients: ['bhaiallu519@gmail.com'],
+                        }),
+                    });
+                    
+                    if (response.ok) {
+                        console.log('Admin notification sent successfully');
+                         } else {
+                        const errorText = await response.text();
+                        console.error('Failed to send admin notification:', errorText);
+                         }
+                } catch (error) {
+                    console.error('Error occurred while sending admin notification:', error.message);
+                }
+            }
+            
+            
+            async function fetchUserDetails() {
+                try {
+                    const response = await axios.get('http://127.0.0.1:8000/hr/api/user_details', {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (response.status === 200) {
+                        const data = response.data;
+                        document.getElementById('username').value = `${data.first_name} ${data.last_name}`;
+                        document.getElementById('emp_id').value = data.emp_id;
+                        document.getElementById('email').value = data.email;
+                        document.getElementById('department').value = data.department;
+                    } else {
+                        console.error('Failed to fetch user details:', response.data);
+                        toastr.error('Failed to fetch user details');
+                    }
+                } catch (error) {
+                    console.error('Error fetching user details:', error);
+                    toastr.error('Error fetching user details');
+                }
+            }
+
+            fetchUserDetails();
+            const Passport_Form = document.getElementById('passport-form');
+            const loadingOverlay = document.getElementById('loading-overlay');
+
+            function validateForm() {
+    const requiredFields = [
+        {id: 'username', message: 'Employee Name is required'},
+        {id: 'emp_id', message: 'Employee ID is required'},
+        {id: 'email', message: 'Email is required'},
+        {id: 'department', message: 'Department is required'},
+        {id: 'group', message: 'Business Group is required'},
+        {id: 'Passport_country_name', message: 'Country Name is required'},
+        {id: 'Passport_document_type', message: 'Document Type is required'},
+        {id: 'Passport_category', message: 'Category is required'},
+        {id: 'Passport_sub_category', message: 'Sub category is required'},
+        {id: 'Passport_document_number', message: 'Document number is required'},
+        {id: 'Passport_issued_by', message: 'Issued by is required'},
+        {id: 'Passport_issued_at', message: 'Issued at is required'},
+        {id: 'Passport_issued_date', message: 'Issued date is required'},
+        {id: 'Passport_issuing_authority', message: 'Issuing authority is required'},
+        {id: 'Passport_valid_from', message: 'Valid from is required'},
+        {id: 'Passport_valid_to', message: 'Valid to is required'},
+        {id: 'Passport_verified_by', message: 'Verified by is required'},
+        {id: 'Passport_verified_date', message: 'Verified date is required'},
+        {id: 'passport_number', message: 'Passport Number is required'},
+        {id: 'passport_type', message: 'Passport Type is required'},
+        {id: 'country_of_issue', message: 'Country of issue is required'},
+        {id: 'place_of_issue', message: 'Place of issue is required'},
+        {id: 'number_of_accompanying_person', message: 'Number of Accompanying Person is required'},
+        {id: 'previous_passport_number', message: 'Previous Passport Number is required'},
+    ];
+    let isValid = true;
+
+    requiredFields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (element && !element.value.trim()) {
+            isValid = false;
+            element.classList.add('error');
+            showError(element, field.message);
+        } else if (element) {
+            element.classList.remove('error');
+            removeError(element);
+        }
+    });
+
+    return isValid;
+}
+
+            function showError(field, message) {
+            let errorElement = field.parentNode.querySelector('.error-message');
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.className = 'error-message';
+                field.parentNode.appendChild(errorElement);
+            }
+            errorElement.textContent = message;
+        }
+
+            function removeError(field) {
+            const errorElement = field.parentNode.querySelector('.error-message');
+            if (errorElement) {
+                errorElement.remove();
+            }
+        }
+            
+           
+            Passport_Form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                
+                if (!validateForm()) {
+                    
+                    showSnackbar('Please fill all required fields', 'error');
+                    return;
+                }
+                
+                loadingOverlay.style.display = 'flex';
+                await new Promise(resolve => setTimeout(resolve, 3000));
+
+                const csrftoken = document.getElementById('csrf_token').value;
+
+                const data = {
+                    username: document.getElementById('username').value,
+                    emp_id: document.getElementById('emp_id').value,
+                    email: document.getElementById('email').value,
+                    department: document.getElementById('department').value,
+                    group: document.getElementById('group').value,
+                    Passport_country_name: document.getElementById('Passport_country_name').value,
+                    Passport_document_type: document.getElementById('Passport_document_type').value,
+                    Passport_category: document.getElementById('Passport_category').value || null,
+                    Passport_sub_category: document.getElementById('Passport_sub_category').value,
+                    Passport_document_number: document.getElementById('Passport_document_number').value,
+                    Passport_issued_by: document.getElementById('Passport_issued_by').value,
+                    Passport_issued_at: document.getElementById('Passport_issued_at').value,
+                    Passport_issued_date: document.getElementById('Passport_issued_date').value || null,
+                    Passport_issuing_authority: document.getElementById('Passport_issuing_authority').value || null,
+                    Passport_valid_from: document.getElementById('Passport_valid_from').value || null,
+                    Passport_valid_to: document.getElementById('Passport_valid_to').value,
+                    Passport_verified_by: document.getElementById('Passport_verified_by').value,
+                    Passport_verified_date: document.getElementById('Passport_verified_date').value,
+                    passport_number: document.getElementById('passport_number').value,
+                    passport_type: document.getElementById('passport_type').value,
+                    country_of_issue: document.getElementById('country_of_issue').value,
+                    place_of_issue: document.getElementById('place_of_issue').value,
+                    number_of_accompanying_person: document.getElementById('number_of_accompanying_person').value,
+                    previous_passport_number: document.getElementById('previous_passport_number').value,
+                };
+
+                Object.keys(data).forEach(key => data[key] === null && delete data[key]);
+
+                try {
+                    const response = await axios.post('http://127.0.0.1:8000/hr/api/document-passport', data, {
+                        headers: {
+                            "X-CSRFTOKEN": csrftoken,
+                            'Authorization':`Bearer ${authToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                    });
+
+                    if (response.status === 200) {
+                        await sendAdminNotification(document.getElementById('email').value);
+                        clearNonFixedFields();
+                        console.log('Submitted Application:', response.data);
+                        showSnackbar('DocumentForPassport application submitted successfully');
+                    }
+                    else{
+                        showSnackbar('DocumentForPassport application submitted Failed');
+                    }
+                } catch (error) {
+                    if (error.response && error.response.data) {
+                        console.error('Error details:', error.response.data);
+                        } else {
+                        console.error('Error occurred:', error.message);
+                      
+                    }
+
+                
+                showSnackbar('An error occurred while submitting the application');
+                } finally {
+                    loadingOverlay.style.display = 'none';
+                }
+            });
+        });
+
+
+        function clearNonFixedFields() {
+            const fieldsToReset = [
+            'group', 'Passport_country_name', 'Passport_document_type', 'Passport_category', 'Passport_sub_category',
+            'Passport_document_number', 'Passport_issued_by', 'Passport_issued_at',
+            'Passport_issued_date', 'Passport_issued_date', 'Passport_issuing_authority', 'Passport_valid_from',
+            'Passport_valid_to', 'Passport_verified_by', 'Passport_verified_date', 'passport_number', 'passport_type',
+            'country_of_issue', 'place_of_issue', 'number_of_accompanying_person', 'previous_passport_number',
+            ];
+            
+            fieldsToReset.forEach(fieldId => {
+                document.getElementById(fieldId).value = '';
+            });
+        }
+        function showSnackbar(message, duration = 3000) {
+            const snackbar = document.getElementById("snackbar");
+            snackbar.textContent  = message;
+            snackbar.classList.add("show");
+            setTimeout(function() {
+                snackbar.classList.remove("show");
+            }, duration);
+        }
+
+        const requiredFields = [
+        {id: 'username', message: 'Employee Name is required'},
+        {id: 'emp_id', message: 'Employee ID is required'},
+        {id: 'email', message: 'Email is required'},
+        {id: 'department', message: 'Department is required'},
+        {id: 'group', message: 'Business Group is required'},
+        {id: 'Passport_country_name', message: 'Country Name is required'},
+        {id: 'Passport_document_type', message: 'Document Type is required'},
+        {id: 'Passport_category', message: 'Category is required'},
+        {id: 'Passport_sub_category', message: 'Sub category is required'},
+        {id: 'Passport_document_number', message: 'Document number is required'},
+        {id: 'Passport_issued_by', message: 'Issued by is required'},
+        {id: 'Passport_issued_at', message: 'Issued at is required'},
+        {id: 'Passport_issued_date', message: 'Issued date is required'},
+        {id: 'Passport_issuing_authority', message: 'Issuing authority is required'},
+        {id: 'Passport_valid_from', message: 'Valid from is required'},
+        {id: 'Passport_valid_to', message: 'Valid to is required'},
+        {id: 'Passport_verified_by', message: 'Verified by is required'},
+        {id: 'Passport_verified_date', message: 'Verified date is required'},
+        {id: 'passport_number', message: 'Passport Number is required'},
+        {id: 'passport_type', message: 'Passport Type is required'},
+        {id: 'country_of_issue', message: 'Country of issue is required'},
+        {id: 'place_of_issue', message: 'Place of issue is required'},
+        {id: 'number_of_accompanying_person', message: 'Number of Accompanying Person is required'},
+        {id: 'previous_passport_number', message: 'Previous Passport Number is required'},
+    ];
+
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if (element) {
+                    element.addEventListener('blur', () => {
+                        if (!element.value.trim()) {
+                            element.classList.add('error');
+                            showError(element, field.message);
+                        } else {
+                            element.classList.remove('error');
+                            removeError(element);
+                        }
+                    });
+                }
+            });
+
+
+        function navigateToHistory() {
+            window.location.href = '/hr/documentforpassport/documentforpassporthistory';
+        }
+    
+    </script>
+</body>
+</html>
+

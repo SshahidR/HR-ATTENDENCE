@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document for Labour Card History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        h1 {
+            font-size:20px;
+            text-align:start;
+            font-weight:bold;
+            padding:10px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            background-color: #333;
+            color: white;
+            padding: 0 10px;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            padding-bottom: 15px;
+        }
+        .heading{
+            font-size:20px;
+            text-align:start;
+            padding: 10px;
+            font-weight: bold;
+          }
+
+       
+        .navbar-heading {
+            font-size:15px;
+            margin-left: 20px;
+            padding-bottom: 8px;
+        }
+
+        .main-container {
+            width: 100%;
+            padding: 10px;
+        }
+        .container {
+            width: 100%;
+            padding: 0;
+            max-width: none;
+        }
+        .table-responsive {
+        width: 100%;
+    }
+    
+    
+    .nav-right, .nav-left {
+     position: relative;
+    }
+    
+    
+    .nav-left {
+     display: flex;
+     align-items: center;
+     padding-bottom: 8px;
+    }
+    
+    
+    .backbtn {
+     background-color: inherit;
+     color: white;
+     font-size: 16px;
+     border: none;
+     cursor: pointer;
+     padding: 10px;
+     padding-bottom: 18px;
+    }
+    
+    
+    table {
+     width: 100%;
+     border-collapse: collapse;
+     margin-top: 20px;
+     background-color: whitesmoke;
+    
+    }
+    
+    
+    th, td {
+     padding: 10px;
+     text-align: left;
+     border-bottom: 1px solid #ddd;
+    
+    }
+    
+    .no-data {
+     text-align: center;
+     margin-top: 20px;
+     font-size: 18px;
+     color: #666;
+    }
+    
+    
+    .popup {
+     display: none;
+     position: fixed;
+     justify-content: center;
+     align-items: center;
+     z-index: 1;
+     left: 0;
+     top: 0;
+     width: 100%;
+     height: 100%;
+     overflow: auto;
+     padding-top: 60px;
+    }
+    
+    
+    .popup-content {
+     background-color: #fefefe;
+     margin: 5% auto;
+     padding: 20px;
+     border: 1px solid #888;
+     width: 80%;
+     max-width: 400px;
+     border-radius: 5px;
+     position: relative;
+    }
+    
+    
+    
+    .history-container {
+     display: flex;
+     flex-direction: row;
+     justify-content: end;
+    }
+    
+    
+    hr.solid {
+     border-top: 3px solid #bbb;
+     margin-top: 30px;
+    }
+    
+    
+    .close {
+     color: #aaa;
+     position: absolute;
+     top: 10px;
+     right: 10px;
+     font-size: 28px;
+     font-weight: bold;
+     cursor: pointer;
+    }
+    
+    
+    .close:hover,
+    .close:focus {
+     color: black;
+     text-decoration: none;
+    }
+    
+    
+    .edit-btn, .delete-btn {
+     cursor: pointer;
+     color: #007bff;
+     font-size: 16px;
+     position: absolute;
+     top: 10px;
+    }
+    
+    @media (min-width: 768px) {
+        .container, .container-md, .container-sm {
+            max-width: none;
+        }
+    }
+    
+    
+    .edit-btn {
+     left: 10px;
+    }
+    
+    
+    .delete-btn {
+     left: 50px;
+    }
+    
+    
+    .edit-btn:hover, .delete-btn:hover {
+     color: #0056b3;
+    }
+    
+    
+    
+    .icons {
+     margin-left: 30px;
+     color: black;
+     margin-top: 10px;
+     font-size: 12px;
+    }
+    
+    
+    
+    
+    @media (max-width: 767px) {
+        .table-responsive {
+            font-size: 0.8rem;
+        }
+        .table th, .table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+    }
+    .table th{
+        background-color: #EDEADE;
+    }
+
+    .pagination-container {
+        background-color: whitesmoke;
+        padding: 10px;
+        margin-top: 20px;
+        border-radius: 10px;
+        display: inline-block;
+        margin-left: calc(40% - 55px);
+    }
+
+    .pagination-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    .pagination-button {
+        background-color: transparent;
+        color: black;
+        border: none;
+        padding: 10px 20px;
+        margin: 0 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
+    }
+
+    #page-numbers {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    #page-numbers::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .pagination-button, .page-number {
+        margin: 0 5px;
+    }
+    
+    .pagination-button:hover {
+        background-color: white;
+    }    
+
+    .pagination-button i {
+        margin: 0 5px;
+    }
+
+
+    .page-number {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 0 2px;
+        border: 1px solid #333;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .page-number.active {
+        background-color: #333;
+        color: white;
+    }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+            <nav class="navbar">
+                <div class="nav-left">
+                    <button class="backbtn" onclick="navigateBack()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="navbar-heading">Document for Labour Card History</h2>
+                </div>
+            </nav>
+
+            <h1>History</h1>
+            <div class="table-responsive">
+                <table id="history-table" class="table  table-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-nowrap">Employee Name</th>
+                            <th class="text-nowrap">Employee ID</th>
+                            <th class="text-nowrap">Applied on</th>
+                            <th class="text-nowrap">Status</th>
+                            <th class="text-nowrap">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div id="no-data" class="no-data">No data available. Please fill in the details on the Document for Labour Card page.</div>
+                <div class="pagination-container">
+                    <div class="pagination-controls">
+                        <button class="pagination-button" id="prev-btn" onclick="prevPage()" disabled>
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <div id="page-numbers"></div>
+                        <button class="pagination-button" id="next-btn" onclick="nextPage()" disabled>
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Popup to show full details -->
+                <div id="popup" class="popup">
+                    <div class="popup-content">
+                        <span class="close" onclick="closePopup()">&times;</span>
+                        <div class="history-container">
+                            <i class="fas fa-pencil-alt edit-btn" onclick="editDetails()"></i>
+                            <i class="fas fa-trash-alt delete-btn" onclick="deleteDetails()"></i>
+                        </div>
+                        <hr class="solid">
+                        <div id="popup-details">
+                            <!-- Details will be filled dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let labourcardList = [];
+        let labourcardId = null;
+        let currentPage = 1;
+        const rowsPerPage = 10;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const authToken = getAuthToken();
+            if (authToken) {
+                fetchLabourcardhistory(authToken);
+            } else {
+                console.error('Authentication token not found.');
+                document.getElementById('no-data').style.display = 'block';
+            }
+        });
+
+        function getAuthToken() {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'auth_token') {
+                    return decodeURIComponent(value);
+                }
+            }
+            return null;
+        }
+
+        function fetchLabourcardhistory(authToken) {
+            axios.get('http://127.0.0.1:8000/hr/api/labour-card-get', {
+                headers: {
+                    Authorization: `Bearer ${authToken}`
+                }
+            })
+            .then(response => {
+                labourcardList = response.data;
+                displayLabourcardhistory(labourcardList);
+            })
+            .catch(error => {
+                console.error('Error fetching labour card history:', error);
+                document.getElementById('no-data').style.display = 'block';
+            });
+        }
+
+        function displayLabourcardhistory(labourcardList) {
+            const historyTableBody = document.querySelector('#history-table tbody');
+            const noDataDiv = document.getElementById('no-data');
+            const totalPages = Math.ceil(labourcardList.length / rowsPerPage);
+
+            if (labourcardList.length === 0) {
+                noDataDiv.style.display = 'block';
+                historyTableBody.innerHTML = '';
+                document.getElementById('page-numbers').innerHTML = '';
+                document.getElementById('prev-btn').disabled = true;
+                document.getElementById('next-btn').disabled = true;
+            } else {
+                noDataDiv.style.display = 'none';
+                historyTableBody.innerHTML = '';
+                const start = (currentPage - 1) * rowsPerPage;
+                const end = Math.min(start + rowsPerPage, labourcardList.length);
+
+                for (let i = start; i < end; i++) {
+                    const details = labourcardList[i];
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="text-nowrap">${details.username}</td>
+                        <td class="text-nowrap">${details.emp_id}</td>
+                        <td class="text-nowrap">${details.documentForlabourcardApplied_date}</td>
+                        <td class="text-nowrap">${details.documentForlabourcard_status}</td>
+                        <td>
+                            <i class="far fa-eye-slash view-btn" onclick="viewDetails(${details.id})"></i>
+                        </td>
+                    `;
+                    historyTableBody.appendChild(row);
+                }
+
+                const pageNumbers = document.getElementById('page-numbers');
+                pageNumbers.innerHTML = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageNum = document.createElement('span');
+                    pageNum.className = `page-number ${i === currentPage ? 'active' : ''}`;
+                    pageNum.textContent = i;
+                    pageNum.onclick = () => goToPage(i);
+                    pageNumbers.appendChild(pageNum);
+                }
+
+                document.getElementById('prev-btn').disabled = currentPage === 1;
+                document.getElementById('next-btn').disabled = currentPage === totalPages;
+            }
+        }
+
+        function viewDetails(id) {
+            const details = labourcardList.find(details => details.id === id);
+            currentIndex = id;
+
+            const popup = document.getElementById('popup');
+            const popupDetails = document.getElementById('popup-details');
+
+            popupDetails.innerHTML = `
+                <p><strong>Employee Name:</strong> ${details.username}</p>
+                <p><strong>Employee ID:</strong> ${details.emp_id}</p>
+                <p><strong>Email:</strong> ${details.email}</p>
+                <p><strong>Business Group:</strong> ${details.group}</p>
+                <p><strong>Department:</strong> ${details.department}</p>
+                <p><strong>Country Name:</strong> ${details.LabourCardcountry_name}</p>
+                <p><strong>Document Type:</strong> ${details.LabourCarddocument_type}</p>
+                <p><strong>Category:</strong> ${details.LabourCardcategory}</p>
+                <p><strong>Sub Category:</strong> ${details.LabourCardsub_category}</p>
+                <p><strong>Document Number:</strong> ${details.LabourCarddocument_number}</p>
+                <p><strong>Issued By:</strong> ${details.LabourCardissued_by}</p>
+                <p><strong>Issued At:</strong> ${details.LabourCardissued_at}</p>
+                <p><strong>Issued Date:</strong> ${details.LabourCardissued_date}</p>
+                <p><strong>Issuing Authority:</strong> ${details.LabourCardissuing_authority}</p>
+                <p><strong>Valid Date:</strong> ${details.LabourCardvalid_from}</p>
+                <p><strong>Valid To:</strong> ${details.LabourCardvalid_to}</p>
+                <p><strong>Verified By:</strong> ${details.LabourCardverified_by}</p>
+                <p><strong>Verified Date:</strong> ${details.LabourCardverified_date}</p>
+                <p><strong>Aly Personal Id Number:</strong> ${details.aly_personal_id_number}</p>
+                <p><strong>Aly Work Permit Number:</strong> ${details.aly_work_permit_number}</p>
+                <p><strong>Aly Place Of Issue :</strong> ${details.aly_place_of_issue}</p>
+            `;
+
+            const editBtn = document.querySelector('.edit-btn');
+            const deleteBtn = document.querySelector('.delete-btn');
+
+            if (details.documentForlabourcard_status === 'confirmed' || details.documentForlabourcard_status === 'approved' || details.documentForlabourcard_status === 'rejected') {
+                editBtn.style.color = 'red';
+                deleteBtn.style.color = 'red';
+                editBtn.style.pointerEvents = 'none';
+                deleteBtn.style.pointerEvents = 'none';
+            } else {
+                editBtn.style.color = '#007bff';
+                deleteBtn.style.color = '#007bff';
+                editBtn.style.pointerEvents = 'auto';
+                deleteBtn.style.pointerEvents = 'auto';
+            }
+
+            const eyeIcon = document.querySelector(`[onclick="viewDetails(${id})"]`);
+            const allEyeIcons = document.querySelectorAll('.view-btn');
+
+            // Close all other eye icons
+            allEyeIcons.forEach(icon => {
+                if (icon !== eyeIcon) {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            });
+
+            // Toggle the clicked eye icon
+            eyeIcon.classList.toggle('fa-eye-slash');
+            eyeIcon.classList.toggle('fa-eye');
+
+            popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'none';
+
+            // Close all eye icons
+            const allEyeIcons = document.querySelectorAll('.view-btn');
+            allEyeIcons.forEach(icon => {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            });
+        }
+
+        function editDetails() {
+            const details = labourcardList.find(item => item.id === currentIndex);
+
+            axios.get(`http://127.0.0.1:8000/hr/api/labour-card-get/${details.id}`, {
+                headers: {
+                    Authorization: `Bearer ${getAuthToken()}`
+                }
+            })
+            .then(response => {
+                const labourcard  = response.data;
+
+                // Redirect to the edit page with query parameters
+                const queryString = Object.keys(labourcard).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(labourcard[key])}`).join('&');
+                window.location.href = `/hr/LabourCardDocument/documentforlabourcardupdate?${queryString}`;
+            })
+            .catch(error => {
+                console.error('Error fetching Labour card details for editing:', error.response.data);
+                alert('An error occurred while fetching Labour card details for editing.');
+            });
+        }
+
+        function deleteDetails() {
+            const details = labourcardList.find(item => item.id === currentIndex);
+            if (details) {
+                if (confirm('Are you sure you want to delete this record?')) {
+                    axios.delete(`http://127.0.0.1:8000/hr/api/delete-document-labourcard/${details.id}`, {
+                        headers: {
+                            Authorization: `Bearer ${getAuthToken()}`
+                        }
+                    })
+                    .then(response => {
+                        fetchLabourcardhistory(getAuthToken()); // Refresh the list
+                        closePopup();
+                        alert('Record deleted successfully.');
+                    })
+                    .catch(error => {
+                        console.error('Error deleting record:', error);
+                        alert('An error occurred while deleting the record.');
+                    });
+                }
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayLabourcardhistory(labourcardList);
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(labourcardList.length / rowsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayLabourcardhistory(labourcardList);
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            displayLabourcardhistory(labourcardList);
+        }
+
+        function navigateBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

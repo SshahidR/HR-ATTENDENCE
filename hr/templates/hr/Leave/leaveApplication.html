@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            
+           
+        }
+   
+
+        h1 {
+            text-align: start;
+            font-size:15px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+
+        
+        .navbar-heading {
+            font-size:15px;
+            margin-left: 20px;
+        }
+
+        .nav-right, .nav-left {
+            position: relative;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            top: -5px;
+            right: 35px;
+            background-color: #555;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            z-index: 1;
+            font-size: 12px;
+        }
+
+        .nav-right:hover .tooltip {
+            display: block;
+        }
+
+        .input-field, .select-field {
+           width: 100%;
+           padding: 10px 10px 10px 40px;
+           border: 1px solid #ccc;
+           border-radius: 4px;
+           box-sizing: border-box;
+           color: black;
+       }
+
+       .select-field {
+           appearance: none;
+           -webkit-appearance: none;
+           -moz-appearance: none;
+           background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>') no-repeat right 10px center;
+           background-size: 12px;
+       }
+
+       .input-field::placeholder {
+           color: black;
+       }
+       .icon {
+            position: absolute;
+            left: 10px;
+            top: 38px; /* Adjust this value as needed */
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            position: absolute;
+            bottom: -20px; /* Adjust this value as needed */
+            left: 0;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 0.5rem; /* Increase this value to accommodate the error message */
+        }
+        .input-field.error, .select-field.error {
+           border-color: red;
+        }
+
+        .icon i {
+            color: black;
+            font-size: 14px;
+        }
+
+        .label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size:12px;
+
+        }
+
+        .save-button {
+            width: 20%;
+            padding: 10px;
+            border: none;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            
+            margin-bottom: 20px;
+        }
+
+        .form-label{
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+           }
+           .form-control{
+            font-size: 13px;
+           }
+           .form-select{
+            font-size: 13px;
+            }
+            .mb-3 {
+                margin-bottom: 0.7rem !important;
+            }
+
+        #snackbar {
+            visibility: hidden; 
+            width: 350px; 
+            height:50px;
+            margin-left: -125px; 
+            background-color: green;
+            color: white; 
+            text-align: center; 
+            border-radius: 2px; 
+            padding: 16px; 
+            position: fixed; 
+            z-index: 1;
+            left: 50%; 
+            bottom: 30px; 
+          }
+
+          #snackbar.error {
+            background-color: #f44336; /* Red background for errors */
+            color: white;
+        }
+          
+         #snackbar.show {
+            visibility: visible;
+            
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+          }
+          
+           @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+          }
+          
+          @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+          }
+          
+          @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+          }
+          
+          @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+          }
+          .container{
+            height:100%;
+            width:50%;
+            background-color:white;
+            margin:20px;
+            padding:20px;
+          
+          }
+          .heading{
+            font-size:20px;
+            text-align:start;
+            font-weight:bold;
+            padding:10px;
+          }
+          #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar bg-dark text-white">
+            <div class="container-fluid">
+                <div class="nav-left">
+                    <h2 class="navbar-heading">Leave Application</h2>
+                </div>
+                <div class="nav-right">
+                    <div class="dropdown">
+                        <button class="btn btn-link text-white" class="dropbtn" onclick="navigateToHistory()">⋮</button>
+                        <span class="tooltip">History</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <h1 class="heading">Leave Application Form</h1>
+        <form id="leave-form">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+                
+
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Employee Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            <input type="text" id="username" placeholder="Employee Name" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Employee ID</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                            <input type="text" id="emp_id" placeholder="Employee ID" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                            <input type="text" id="email" placeholder="Email" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Department</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                            <input type="text" id="department" placeholder="Department" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Business Group</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-building"></i></span>
+                            <input type="text" id="group" placeholder="Business Group" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Start Date</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            <input type="date" id="start_date" class="form-control" onchange="calculateDuration()">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">End Date</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            <input type="date" id="end_date" class="form-control" onchange="calculateDuration()">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Duration</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-clock"></i></span>
+                            <input type="text" id="duration" placeholder="Duration" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Replaced By</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-user-friends"></i></span>
+                            <input type="text" id="replaced_by" placeholder="Replaced By" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Absence Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-list"></i></span>
+                            <input type="text" id="leave_type" placeholder="Leave Type" class="form-control" list="absenceTypeList">
+                            <datalist id="absenceTypeList">
+                                <option value="Annual Leave">Annual Leave</option>
+                                <option value="Sick Leave">Sick Leave</option>
+                                <option value="Maternity Leave">Maternity Leave</option>
+                                <option value="Personal Leave">Personal Leave</option>
+                                <option value="Unpaid Leave">Unpaid Leave</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Leave Balance</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-list"></i></span>
+                            <input type="text" id="leave_balance" placeholder="Leave Balance" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Category</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-tag"></i></span>
+                            <input type="text" id="category" placeholder="Category" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Absence Reason</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-comment"></i></span>
+                            <input type="text" id="leave_reason" placeholder="Leave Reason" class="form-control" list="absenceReasonList">
+                            <datalist id="absenceReasonList">
+                                <option value="1 Hour Exam Paper">1 Hour Exam Paper</option>
+                                <option value="2 Hour Exam Paper">2 Hour Exam Paper</option>
+                                <option value="3 Hour Exam Paper">3 Hour Exam Paper</option>
+                                <option value="Accident">Accident</option>
+                                <option value="Accommodation Shifting">Accommodation Shifting</option>
+                                <option value="Annual Leave Extension">Annual Leave Extension</option>
+                                <option value="Annual Vacation">Annual Vacation</option>
+                                <option value="Funeral">Funeral</option>
+                                <option value="Hajj">Hajj</option>
+                                <option value="Hospitalized">Hospitalized</option>
+                                <option value="Others">Others</option>
+                                <option value="Rest / Break">Rest / Break</option>
+                                <option value="Umrah">Umrah</option>
+                                <option value="Work Stress">Work Stress</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Passport Withdrawal Date</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-passport"></i></span>
+                            <input type="date" id="passport_withdrawal_date" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label">Request for Airticket</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-plane"></i></span>
+                            <input type="text" id="request_for_airticket" placeholder="Request for Airticket" class="form-control" list="requestAirticketList">
+                            <datalist id="requestAirticketList">
+                                <option value="Book Airticket">Book Airticket</option>
+                                <option value="Not Applicable">Not Applicable</option>
+                                <option value="Reimburse Airticket">Reimburse Airticket</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb">
+                        <label class="form-label">Comments</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-comments"></i></span>
+                            <input type="text" id="leaves_comments" placeholder="Comments" class="form-control">
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              
+            <div class="row mt-3 col-12">
+                <div class="col-12 text-center">
+                    <button type="submit" class="save-button">Apply</button>
+                </div>
+            </div>
+            <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="your-csrf-token-here">
+        </form>
+        <div id="snackbar">Application Sent Successfully</div>
+        <div id="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            function getAuthToken() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'auth_token') {
+                        return decodeURIComponent(value);
+                    }
+                }
+                return null;
+            }
+            const authToken = getAuthToken();
+            const apiBaseUrl = 'http://127.0.0.1:8000';
+            console.log("Authentication Token:", authToken);
+        
+            async function sendAdminNotification(email) {
+                try {
+                    const csrftoken = document.getElementById('csrf_token').value;
+                    
+                    const response = await fetch('http://127.0.0.1:8000/hr/api/send_admin_notification', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                            'Authorization': `Bearer ${authToken}`,
+                        },
+                        body: JSON.stringify({
+                            subject: 'Leave Application request',
+                            message: `Leave Application request by Employee with email ${email}.`,
+                            recipients: ['farhanabadubhai@gmail.com'],
+                        }),
+                    });
+                    
+                    if (response.ok) {
+                        console.log('Admin notification sent successfully');
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Failed to send admin notification:', errorText);
+                    }
+                } catch (error) {
+                    console.error('Error occurred while sending admin notification:', error.message);
+                }
+            }
+            
+            async function fetchUserDetails() {
+                try {
+                    const response = await axios.get('http://127.0.0.1:8000/hr/api/user_details', {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (response.status === 200) {
+                        const data = response.data;
+                        document.getElementById('username').value = `${data.first_name} ${data.last_name}`;
+                        document.getElementById('emp_id').value = data.emp_id;
+                        document.getElementById('email').value = data.email;
+                        document.getElementById('department').value = data.department;
+                    } else {
+                        console.error('Failed to fetch user details:', response.data);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user details:', error);
+                }
+            }
+        
+            fetchUserDetails();
+        
+            function validateForm() {
+                const requiredFields = [
+                    {id: 'username', message: 'Employee Name is required'},
+                    {id: 'emp_id', message: 'Employee ID is required'},
+                    {id: 'email', message: 'Email is required'},
+                    {id: 'department', message: 'Department is required'},
+                    {id: 'group', message: 'Business Group is required'},
+                    {id: 'start_date', message: 'Start Date is required'},
+                    {id: 'end_date', message: 'End Date is required'},
+                    {id: 'replaced_by', message: 'Replace By is required'},
+                    {id: 'leave_reason', message: 'Absence Reason is required'},
+                    {id: 'leave_type', message: 'Absence Type is required'},
+                    {id: 'leave_balance', message: 'Leave Balance is required'},
+                    {id: 'category', message: 'Category is required'},
+                    {id: 'duration', message: 'Duration is required'},
+                    {id: 'passport_withdrawal_date', message: 'Passport Withdrawal Date is required'},
+                    {id: 'request_for_airticket', message: 'Request Airticket is required'},
+                    {id: 'leaves_comments', message: 'Comment is required'},
+                ];
+                let isValid = true;
+        
+                requiredFields.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    if (!element.value.trim()) {
+                        isValid = false;
+                        element.classList.add('error');
+                        showError(element, field.message);
+                    } else {
+                        element.classList.remove('error');
+                        removeError(element);
+                    }
+                });
+        
+                if (!isValid) {
+                    showSnackbar('Please fill all required fields', 'error');
+                }
+        
+                return isValid;
+            }
+        
+            function showError(field, message) {
+                let errorElement = field.parentNode.querySelector('.error-message');
+                if (!errorElement) {
+                    errorElement = document.createElement('div');
+                    errorElement.className = 'error-message';
+                    field.parentNode.appendChild(errorElement);
+                }
+                errorElement.textContent = message;
+            }
+        
+            function removeError(field) {
+                const errorElement = field.parentNode.querySelector('.error-message');
+                if (errorElement) {
+                    errorElement.remove();
+                }
+            }
+        
+            const absenceCategory = {
+                "Annual Leave": "Annual Leave",
+                "Sick Leave": "Sick Leave",
+                "Maternity Leave": "Maternity Leave",
+                "Personal Leave": "Personal Leave",
+                "Unpaid Leave": "Unpaid Leave"
+            };
+        
+            const absenceTypeInput = document.getElementById('leave_type');
+            const categoryInput = document.getElementById('category');
+        
+            absenceTypeInput.addEventListener('change', function() {
+                const selectedLeaveType = this.value;
+                categoryInput.value = absenceCategory[selectedLeaveType] || '';
+            });
+            
+            const leaveForm = document.getElementById('leave-form');
+            leaveForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                if (!validateForm()) {
+                    return;
+                }
+        
+                const loadingOverlay = document.getElementById('loading-overlay');
+                loadingOverlay.style.display = 'flex';
+        
+                await new Promise(resolve => setTimeout(resolve, 3000));
+        
+                const csrftoken = document.getElementById('csrf_token').value;
+        
+                const data = {
+                    username: document.getElementById('username').value,
+                    emp_id: document.getElementById('emp_id').value,
+                    email: document.getElementById('email').value,
+                    department: document.getElementById('department').value,
+                    group: document.getElementById('group').value,
+                    start_date: document.getElementById('start_date').value,
+                    end_date: document.getElementById('end_date').value,
+                    replaced_by: document.getElementById('replaced_by').value || null,
+                    leave_reason: document.getElementById('leave_reason').value,
+                    leave_type: document.getElementById('leave_type').value,
+                    leave_balance: document.getElementById('leave_balance').value,
+                    category: document.getElementById('category').value,
+                    duration: parseInt(document.getElementById('duration').value, 10),
+                    passport_withdrawal_date: document.getElementById('passport_withdrawal_date').value || null,
+                    request_for_airticket: document.getElementById('request_for_airticket').value || null,
+                    leaves_comments: document.getElementById('leaves_comments').value || null,
+                };
+        
+                Object.keys(data).forEach(key => data[key] === null && delete data[key]);
+        
+                try {
+                    const response = await axios.post('http://127.0.0.1:8000/hr/api/leave-applications', data, {
+                        headers: {
+                            "X-CSRFTOKEN": csrftoken,
+                            'Authorization':`Bearer ${authToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                    });
+        
+                    if (response.status === 200) {
+                        await sendAdminNotification(document.getElementById('email').value);
+                        clearNonFixedFields();
+                        console.log('Submitted Application:', response.data);
+                        showSnackbar('Leave application submitted successfully', 'success');
+                    } else {
+                        showSnackbar('Leave application submission failed', 'error');
+                    }
+                } catch (error) {
+                    if (error.response && error.response.data) {
+                        console.error('Error details:', error.response.data);
+                    } else {
+                        console.error('Error occurred:', error.message);
+                    }
+                    showSnackbar('An error occurred while submitting the application', 'error');
+                } finally {
+                    loadingOverlay.style.display = 'none';
+                }
+            });
+        });
+        
+        function calculateDuration() {
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+            if (startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                const duration = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                document.getElementById('duration').value = duration;
+            }
+        }
+        
+        function clearNonFixedFields() {
+            const fieldsToReset = [
+                'start_date', 'end_date', 'duration', 'replaced_by', 'leave_type', 'leave_balance',
+                'category', 'leave_reason', 'passport_withdrawal_date',
+                'request_for_airticket', 'leaves_comments', 'group'
+            ];
+            
+            fieldsToReset.forEach(fieldId => {
+                document.getElementById(fieldId).value = '';
+            });
+        }
+        
+        function showSnackbar(message, type = 'success') {
+            const snackbar = document.getElementById("snackbar");
+            snackbar.textContent = message;
+            snackbar.className = "show";
+            if (type === 'error') {
+                snackbar.classList.add("error");
+            } else {
+                snackbar.classList.remove("error");
+            }
+            setTimeout(function() {
+                snackbar.className = snackbar.className.replace("show", "");
+            }, 3000);
+        }
+        
+        const requiredFields = [
+            {id: 'username', message: 'Employee Name is required'},
+            {id: 'emp_id', message: 'Employee ID is required'},
+            {id: 'email', message: 'Email is required'},
+            {id: 'department', message: 'Department is required'},
+            {id: 'group', message: 'Business Group is required'},
+            {id: 'start_date', message: 'Start Date is required'},
+            {id: 'end_date', message: 'End Date is required'},
+            {id: 'replaced_by', message: 'Replace By is required'},
+            {id: 'leave_reason', message: 'Absence Reason is required'},
+            {id: 'leave_type', message: 'Absence Type is required'},
+            {id: 'leave_balance', message: 'Leave Balance is required'},
+            {id: 'category', message: 'Category is required'},
+            {id: 'duration', message: 'Duration is required'},
+            {id: 'passport_withdrawal_date', message: 'Passport Withdrawal Date is required'},
+            {id: 'request_for_airticket', message: 'Request Airticket is required'},
+            {id: 'leaves_comments', message: 'Comment is required'},
+        ];
+        
+        requiredFields.forEach(field => {
+            const element = document.getElementById(field.id);
+            element.addEventListener('blur', () => {
+                if (!element.value.trim()) {
+                    element.classList.add('error');
+                    showError(element, field.message);
+                } else {
+                    element.classList.remove('error');
+                    removeError(element);
+                }
+            });
+        });
+        
+        function navigateBack() {
+            console.log('Navigate back');
+            window.location.href = 'leaveHistory.html';
+        }
+        
+        function navigateToHistory() {
+            window.location.href = '/hr/Leave/leaveHistory';
+        }
+    </script>
+</body>
+</html>

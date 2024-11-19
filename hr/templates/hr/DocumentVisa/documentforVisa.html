@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 15px;
+            text-align: start;
+            margin-left: 10px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            background-color: #333;
+            color: white;
+        }
+
+        .navbar-heading {
+            font-size: 15px;
+            margin-left: 20px;
+        }
+
+        .nav-right,
+        .nav-left {
+            position: relative;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .form-select {
+            font-size: 13px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .heading1 {
+            text-align: start;
+            font-size: 15px;
+        }
+
+        .heading {
+            text-align: start;
+            font-size: 25px;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            top: -5px;
+            right: 35px;
+            background-color: #555;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            z-index: 1;
+            font-size: 12px;
+        }
+
+        .nav-right:hover .tooltip {
+            display: block;
+        }
+
+        .input-field,
+        .select-field {
+            width: 100%;
+            padding: 10px 10px 10px 40px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            color: black;
+        }
+
+        .select-field {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>') no-repeat right 10px center;
+            background-size: 12px;
+        }
+
+        .input-field::placeholder {
+            color: black;
+        }
+
+        .icon {
+            position: absolute;
+            left: 10px;
+            top: 38px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 0.2rem;
+            margin-top: 0;
+        }
+
+        .input-field.error,
+        .select-field.error {
+            border-color: red;
+        }
+
+        .icon i {
+            color: black;
+            font-size: 14px;
+        }
+
+        .label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .save-button {
+            width: 20%;
+            padding: 10px;
+            border: none;
+            background-color: #0f0f0f;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: calc(50% - 55px);
+            margin-bottom: 20px;
+        }
+
+        #snackbar {
+            visibility: hidden;
+            width: 350px;
+            height: 50px;
+            margin-left: -125px;
+            background-color: green;
+            color: white;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .form-control {
+            font-size: 13px;
+        }
+
+        .form-select {
+            font-size: 13px;
+        }
+
+        .mb-3 {
+            margin-bottom: 0.10rem !important;
+        }
+
+        #snackbar.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        #snackbar.error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        @media (max-width: 767px) {
+            .col-md-6:nth-child(2) {
+                margin-top: -0.5rem;
+            }
+
+            .mb-3 {
+                margin-bottom: 0.5rem !important;
+            }
+
+            .col-md-6 {
+                padding-bottom: 0.5rem;
+            }
+
+            .save-button {
+                margin-top: 0.5rem;
+            }
+
+            .space {
+                margin-top: 0;
+            }
+        }
+
+        @-webkit-keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        .container {
+            height: 100%;
+            width: 50%;
+            background-color: white;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 0.1rem;
+        }
+
+        .col-12 {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            font-size: 13px;
+            padding: 8px 8px 8px 10px;
+        }
+
+        .mb-4 {
+            margin-bottom: 0.5rem !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 0.6rem !important;
+        }
+
+        .col-md-6 {
+            padding-bottom: 0.7rem;
+        }
+
+        .save-button {
+            margin-top: 0.5rem;
+        }
+
+        .space {
+            margin-top: -0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <nav class="navbar bg-dark text-white">
+            <div class="container-fluid">
+                <h2 class="navbar-heading">Document For Visa</h2>
+                <div class="nav-right">
+                    <div class="dropdown">
+                        <button class="btn btn-link text-white" onclick="navigateToHistory()">⋮</button>
+                        <span class="tooltip">History</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <h1 class="heading">Document For Visa</h1>
+        <form id="visa-form" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+
+
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label">Employee Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <input type="text" id="username" placeholder="Employee Name" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label">Employee ID</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                        <input type="text" id="emp_id" placeholder="Employee ID" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                        <input type="text" id="email" placeholder="Email" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="department" class="form-label">Department</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        <input type="text" id="department" placeholder="Department" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="group" class="form-label">Business Group</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-building"></i></span>
+                        <input type="text" id="group" placeholder="Business Group" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="Visacountry_name" class="form-label">Country Name</label>
+
+
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                        <input type="text" id="Visacountry_name" list="country" placeholder="Search Country Name"
+                            class="form-control">
+                        <datalist id="country" class="select-field">
+                            <option value="" selected disabled>Select Country Issue</option>
+                            <option value="Afghanistan">Afghanistan</option>
+                            <option value="Algeria">Algeria</option>
+                            <option value="Bahrain">Bahrain</option>
+                            <option value="Bangladesh">Bangladesh</option>
+                            <option value="Bhutan">Bhutan</option>
+                            <option value="Burma Union Myanmar">Burma Union Myanmar</option>
+                            <option value="China">China</option>
+                            <option value="Djibouti">Djibouti</option>
+                            <option value="Egypt">Egypt</option>
+                            <option value="Hong Kong">Hong Kong</option>
+                            <option value="India">India</option>
+                            <option value="Indonesia">Indonesia</option>
+                            <option value="Iran">Iran</option>
+                            <option value="Iraq">Iraq</option>
+                            <option value="Japan">Japan</option>
+                            <option value="Jordan">Jordan</option>
+                            <option value="Kampuchea">Kampuchea</option>
+                            <option value="Kuwait">Kuwait</option>
+                            <option value="Lebanon">Lebanon</option>
+                            <option value="Libya">Libya</option>
+                            <option value="Malaysia">Malaysia</option>
+                            <option value="Mauritania">Mauritania</option>
+                            <option value="Morocco">Morocco</option>
+                            <option value="Nepal">Nepal</option>
+                            <option value="North Korea">North Korea</option>
+                            <option value="Pakistan">Pakistan</option>
+                            <option value="Palestine">Palestine</option>
+                            <option value="Philippines">Philippines</option>
+                            <option value="Qatar">Qatar</option>
+                            <option value="Saudi Arabia">Saudi Arabia</option>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Somalia">Somalia</option>
+                            <option value="South Korea">South Korea</option>
+                            <option value="Sri Lanka">Sri Lanka</option>
+                            <option value="Sudan">Sudan</option>
+                            <option value="Sultanate Of Oman">Sultanate Of Oman</option>
+                            <option value="Syria">Syria</option>
+                            <option value="Taiwan">Taiwan</option>
+                            <option value="Thailand">Thailand</option>
+                            <option value="Tunisia">Tunisia</option>
+                            <option value="United Arab Emirates">United Arab Emirates</option>
+                            <option value="Vietnam">Vietnam</option>
+                            <option value="Yemen">Yemen</option>
+                        </datalist>
+                    </div>
+                </div>
+            </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visadocument_type" class="form-label">Document Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-file"></i></span>
+                            <input type="text" id="Visadocument_type" list="Document_Type"
+                                placeholder="Select Document Type" class="form-control">
+                            <datalist id="Document_Type">
+                                <option value="AE_VISA">AE_VISA</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visacategory" class="form-label">Category</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-table-list"></i></span>
+                            <input type="text" id="Visacategory" placeholder="Category" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visasub_category" class="form-label">Sub Category</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-table-list"></i></span>
+                            <input type="text" id="Visasub_category" placeholder="Sub Category" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visadocument_number" class="form-label">Document Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-regular fa-file"></i></span>
+                            <input type="text" id="Visadocument_number" placeholder="Document Number"
+                                class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visaissued_by" class="form-label">Issued By</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-user-tie"></i></span>
+                            <input type="text" id="Visaissued_by" placeholder="Issued By" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visaissued_at" class="form-label">Issued At</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-check"></i></span>
+                            <input type="text" id="Visaissued_at" placeholder="Issued At" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visaissued_date" class="form-label">Issued Date</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            <input type="date" id="Visaissued_date" class="form-control" pattern="\d{4}-\d{2}-\d{2}">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visaissuing_authority" class="form-label">Issuing Authority</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-sitemap"></i></span>
+                            <input type="text" id="Visaissuing_authority" placeholder="Name of organization"
+                                class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visavalid_from" class="form-label">Valid From</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar-days"></i></span>
+                            <input type="date" id="Visavalid_from" class="form-control" pattern="\d{4}-\d{2}-\d{2}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visavalid_to" class="form-label">Valid To</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar-days"></i></span>
+                            <input type="date" id="Visavalid_to" class="form-control" pattern="\d{4}-\d{2}-\d{2}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visaverified_by" class="form-label">Verified By</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-square-check"></i></span>
+                            <input type="text" id="Visaverified_by" placeholder="Name of Person or Department"
+                                class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="Visaverified_date" class="form-label">Verified Date</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar-week"></i></span>
+                            <input type="date" id="Visaverified_date" class="form-control" pattern="\d{4}-\d{2}-\d{2}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="visa_number" class="form-label">Visa Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-passport"></i></span>
+                            <input type="text" id="visa_number" placeholder="Visa Number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="visa_type" class="form-label">Visa Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-square-pen"></i></span>
+                            <input type="text" id="visa_type" list="Visa_Types" placeholder="Select Visa Type"
+                                class="form-control">
+                            <datalist id="Visa_Types">
+                                <option value="Family Visa">Family Visa</option>
+                                <option value="Residence Permit">Residence Permit</option>
+                                <option value="Visit Visa">Visit Visa</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="sponsor_number" class="form-label">Sponsor Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                            <input type="text" id="sponsor_number" placeholder="Sponsor Number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="sponsor_type" class="form-label">Sponsor Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-user-tie"></i></span>
+                            <input type="text" id="sponsor_type" placeholder="Sponsor Type" class="form-control"
+                                list="sponsortype">
+                            <datalist id="sponsortype" class="select-field">
+                                <option value="" selected disabled>Select sponsor type</option>
+                                <option value="Company Sponsored">Company Sponsored</option>
+                                <option value="Family Sponsored">Family Sponsored</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="sponsor_name" class="form-label">Sponsor Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            <input type="text" id="sponsor_name" placeholder="Sponsor Name" class="form-control"
+                                list="sponsorname">
+                            <datalist id="sponsorname" class="select-field">
+                                <option value="" selected disabled>Select Sponsor Name</option>
+                                <option value="A Y C O BUILDING BR OF AL YOUSUF LLC">A Y C O BUILDING BR OF AL YOUSUF
+                                    LLC</option>
+                                <option value="AL YOUSUF ELEVATORS & ESCALATORS-BR-AL YOUSUF LLC">AL YOUSUF ELEVATORS &
+                                    ESCALATORS-BR-AL YOUSUF LLC</option>
+                                <option value="AL YOUSUF MEDICAL CENTER L.L.C.">AL YOUSUF MEDICAL CENTER L.L.C.</option>
+                                <option value="AL YOUSUF PHARMACY L.L.C.">AL YOUSUF PHARMACY L.L.C.</option>
+                                <option value="AL YOUSUF PROPERTY BR OF AL YOUSUF LLC">AL YOUSUF PROPERTY BR OF AL
+                                    YOUSUF LLC</option>
+                                <option value="AL YOUSUF ROBOTICS L.L.C.">AL YOUSUF ROBOTICS L.L.C.</option>
+                                <option value="ALYOUSUF MEDICAL PROJECT CONTRACTING SOLUTIONS L.L.C.">ALYOUSUF MEDICAL
+                                    PROJECT CONTRACTING SOLUTIONS L.L.C.</option>
+                                <option value="AUTOSPORT (L.L.C.)">AUTOSPORT (L.L.C.)</option>
+                                <option value="Advantage Limousine LLC">Advantage Limousine LLC</option>
+                                <option value="Advantage Limousine-Dubai">Advantage Limousine-Dubai</option>
+                                <option value="Advantage Taxi LLC">Advantage Taxi LLC</option>
+                                <option value="Al Yousuf Agricultural and Landscaping LLC">Al Yousuf Agricultural and
+                                    Landscaping LLC</option>
+                                <option value="Al Yousuf Computer & Telecommunications (L.L.C.)">Al Yousuf Computer &
+                                    Telecommunications (L.L.C.)</option>
+                                <option value="Al Yousuf Computers & Telecommunications Abu Dhabi">Al Yousuf Computers &
+                                    Telecommunications Abu Dhabi</option>
+                                <option value="Al Yousuf Electronics LLC', 'Al Yousuf Electronics LLC">Al Yousuf
+                                    Electronics LLC', 'Al Yousuf Electronics LLC</option>
+                                <option value="Al Yousuf Electronics LLC - Abu Dhabi">Al Yousuf Electronics LLC - Abu
+                                    Dhabi</option>
+                                <option value="Al Yousuf International Construction LLC">Al Yousuf International
+                                    Construction LLC</option>
+                                <option value="Al Yousuf LLC', 'Al Yousuf LLC">Al Yousuf LLC', 'Al Yousuf LLC</option>
+                                <option value="Al Yousuf LLC - Abu Dhabi">Al Yousuf LLC - Abu Dhabi</option>
+                                <option value="Al Yousuf Motors LLC">Al Yousuf Motors LLC</option>
+                                <option value="Al Yousuf Motors LLC - Abu Dhabi">Al Yousuf Motors LLC - Abu Dhabi
+                                </option>
+                                <option value="Al Yousuf Real Estate LLC">Al Yousuf Real Estate LLC</option>
+                                <option value="Al Yousuf Security Controls and Alarms LLC">Al Yousuf Security Controls
+                                    and Alarms LLC</option>
+                                <option value="Al Yousuf Sports Equipment LLC">Al Yousuf Sports Equipment LLC</option>
+                                <option value="Alyousuf Technical Solutions L.L.C.">Alyousuf Technical Solutions L.L.C.
+                                </option>
+                                <option value="BIG BLUE MARINE EQUIPMENTS LLC">BIG BLUE MARINE EQUIPMENTS LLC</option>
+                                <option value="Back on Track LLC">Back on Track LLC</option>
+                                <option value="Delux Limousine LLC">Delux Limousine LLC</option>
+                                <option value="Fujitech Co Ltd Dubai BR">Fujitech Co Ltd Dubai BR</option>
+                                <option value="Future Technology (L.L.C.)">Future Technology (L.L.C.)</option>
+                                <option value="Future Technology - LLC - Abu Dhabi">Future Technology - LLC - Abu Dhabi
+                                </option>
+                                <option value="Imperbit Menmbrane Industries LLC">Imperbit Menmbrane Industries LLC
+                                </option>
+                                <option value="Jebel Ali Free Zone">Jebel Ali Free Zone</option>
+                                <option value="Nipon Kaiji Kyokai Dubai">Nipon Kaiji Kyokai Dubai</option>
+                                <option value="Others">Others</option>
+                                <option value="Sharjah Airport">Sharjah Airport</option>
+                                <option value="Yamaha Motors Company">Yamaha Motors Company</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="sponsor_relationship" class="form-label">Sponsor Relationship</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-users"></i></span>
+                            <input type="text" id="sponsor_relationship" placeholder="Sponsor Relationship"
+                                class="form-control" list="sponsorrelationship">
+                            <datalist id="sponsorrelationship" class="select-field">
+                                <option value="" selected disabled>Select sponsor relationship</option>
+                                <option value="Brother">Brother</option>
+                                <option value="Daughter">Daughter</option>
+                                <option value="Father">Father</option>
+                                <option value="Husband">Husband</option>
+                                <option value="Mom Husband">Mom Husband</option>
+                                <option value="Mother">Mother</option>
+                                <option value="Not Related">Not Related</option>
+                                <option value="Sister">Sister</option>
+                                <option value="Son">Son</option>
+                                <option value="Wife">Wife</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="sponsor_nationality" class="form-label">sponsor Nationality</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-users"></i></span>
+                            <input type="text" id="sponsor_nationality" placeholder="sponsor Nationality"
+                                class="form-control" list="sponsornationality">
+                            <datalist id="sponsornationality" class="select-field">
+                                <option value="" selected disabled>Select Sponsor Nationality</option>
+                                <option value="Afghanistan">Afghanistan</option>
+                                <option value="Algeria">Algeria</option>
+                                <option value="Bahrain">Bahrain</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="Bhutan">Bhutan</option>
+                                <option value="Burma Union Myanmar">Burma Union Myanmar</option>
+                                <option value="China">China</option>
+                                <option value="Djibouti">Djibouti</option>
+                                <option value="Egypt">Egypt</option>
+                                <option value="Hong Kong">Hong Kong</option>
+                                <option value="India">India</option>
+                                <option value="Indonesia">Indonesia</option>
+                                <option value="Iran">Iran</option>
+                                <option value="Iraq">Iraq</option>
+                                <option value="Japan">Japan</option>
+                                <option value="Jordan">Jordan</option>
+                                <option value="Kampuchea">Kampuchea</option>
+                                <option value="Kuwait">Kuwait</option>
+                                <option value="Lebanon">Lebanon</option>
+                                <option value="Libya">Libya</option>
+                                <option value="Malaysia">Malaysia</option>
+                                <option value="Mauritania">Mauritania</option>
+                                <option value="Morocco">Morocco</option>
+                                <option value="Nepal">Nepal</option>
+                                <option value="North Korea">North Korea</option>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="Palestine">Palestine</option>
+                                <option value="Philippines">Philippines</option>
+                                <option value="Qatar">Qatar</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                <option value="Singapore">Singapore</option>
+                                <option value="Somalia">Somalia</option>
+                                <option value="South Korea">South Korea</option>
+                                <option value="Sri Lanka">Sri Lanka</option>
+                                <option value="Sudan">Sudan</option>
+                                <option value="Sultanate Of Oman">Sultanate Of Oman</option>
+                                <option value="Syria">Syria</option>
+                                <option value="Taiwan">Taiwan</option>
+                                <option value="Thailand">Thailand</option>
+                                <option value="Tunisia">Tunisia</option>
+                                <option value="United Arab Emirates">United Arab Emirates</option>
+                                <option value="Vietnam">Vietnam</option>
+                                <option value="Yemen">Yemen</option>
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="emirate" class="form-label">Emirate</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span>
+                            <input type="text" id="emirate" placeholder="Emirate" class="form-control" list="emirate">
+                            <datalist id="emirate" class="select-field">
+                                <option value="" selected disabled>Select Emirate</option>
+                                <option value="Abu Dhabi">Abu Dhabi</option>
+                                <option value="Ajman">Ajman</option>
+                                <option value="Al Ain">Al Ain</option>
+                                <option value="Dubai">Dubai</option>
+                                <option value="Fujairah">Fujairah</option>
+                                <option value="Ras al-Khaimah">Ras al-Khaimah</option>
+                                <option value="Sharjah">Sharjah</option>
+                                <option value="Umm al-Qaiwain">Umm al-Qaiwain</option>
+                            </datalist>
+                        </div>
+                    </div>
+
+                </div>
+                <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="your-csrf-token-here">
+                <button type="submit" class="save-button">Apply</button>
+
+                <p id="formMessage"></p>
+
+        </form>
+
+
+        <div id="snackbar">Application Sent Successfully</div>
+        <div id="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            function getAuthToken() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'auth_token') {
+                        return decodeURIComponent(value);
+                    }
+                }
+                return null;
+            }
+
+            let authToken = getAuthToken();
+            const apiBaseUrl = 'http://127.0.0.1:8000/';
+            console.log("Authentication Token:", authToken);
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+            };
+
+            async function sendAdminNotification(email) {
+                try {
+                    const csrftoken = document.getElementById('csrf_token').value;
+                    const response = await fetch(`${apiBaseUrl}hr/api/send_admin_notification`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                            'Authorization': `Bearer ${authToken}`,
+                        },
+                        body: JSON.stringify({
+                            subject: 'Document for labour card request',
+                            message: `Document for labour card request by Employee with email ${email}.`,
+                            recipients: ['farhanabadubhai@gmail.com'],
+                        }),
+                    });
+
+                    if (response.ok) {
+                        console.log('Admin notification sent successfully');
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Failed to send admin notification:', errorText);
+                    }
+                } catch (error) {
+                    console.error('Error occurred while sending admin notification:', error.message);
+                }
+            }
+
+            function validateForm() {
+                const requiredFields = [
+                    { id: 'username', message: 'Employee Name is required' },
+                    { id: 'emp_id', message: 'Employee ID is required' },
+                    { id: 'email', message: 'Email is required' },
+                    { id: 'department', message: 'Department is required' },
+                    { id: 'group', message: 'Business Group is required' },
+                    { id: 'Visacountry_name', message: 'Country Name is required' },
+                    { id: 'Visadocument_type', message: 'Document Type is required' },
+                    { id: 'Visacategory', message: 'Category is required' },
+                    { id: 'Visasub_category', message: 'Sub category is required' },
+                    { id: 'Visadocument_number', message: 'Document number is required' },
+                    { id: 'Visaissued_by', message: 'Issued by is required' },
+                    { id: 'Visaissued_at', message: 'Issued at is required' },
+                    { id: 'Visaissued_date', message: 'Issued date is required' },
+                    { id: 'Visaissuing_authority', message: 'Issuing authority is required' },
+                    { id: 'Visavalid_from', message: 'Valid from is required' },
+                    { id: 'Visavalid_to', message: 'Valid to is required' },
+                    { id: 'Visaverified_by', message: 'Verified by is required' },
+                    { id: 'Visaverified_date', message: 'Verified date is required' },
+                    { id: 'visa_number', message: 'visa number is required' },
+                    { id: 'visa_type', message: 'visa type is required' },
+                    { id: 'sponsor_type', message: 'sponsor type is required' },
+                    { id: 'sponsor_name', message: 'sponsor name is required' },
+                    { id: 'sponsor_relationship', message: 'sponsor relationship is required' },
+                    { id: 'sponsor_number', message: 'sponsor number is required' },
+                    { id: 'sponsor_nationality', message: 'sponsor nationality is required' },
+                    { id: 'emirate', message: 'emirate is required' },
+                ];
+                let isValid = true;
+
+                requiredFields.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    if (!element.value.trim()) {
+                        isValid = false;
+                        element.classList.add('error');
+                        showError(element, field.message);
+                    } else {
+                        element.classList.remove('error');
+                        removeError(element);
+                    }
+                });
+
+                return isValid;
+            }
+
+            function showError(field, message) {
+                let errorElement = field.parentNode.querySelector('.error-message');
+                if (!errorElement) {
+                    errorElement = document.createElement('div');
+                    errorElement.className = 'error-message';
+                    field.parentNode.appendChild(errorElement);
+                }
+                errorElement.textContent = message;
+            }
+
+            function removeError(field) {
+                const errorElement = field.parentNode.querySelector('.error-message');
+                if (errorElement) {
+                    errorElement.remove();
+                }
+            }
+
+            async function fetchUserDetails() {
+                try {
+                    const response = await axios.get(`${apiBaseUrl}hr/api/user_details`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+
+                    if (response.status === 200) {
+                        const data = response.data;
+                        console.log('User Data:', data);
+                        document.getElementById('username').value = `${data.first_name} ${data.last_name}`;
+                        document.getElementById('emp_id').value = data.emp_id;
+                        document.getElementById('email').value = data.email;
+                        document.getElementById('group').value = data.group;
+                        document.getElementById('department').value = data.department;
+                    } else {
+                        console.error('Error fetching user details', response.data);
+                        toastr.error('Error fetching user details');
+                    }
+                } catch (error) {
+                    console.error('An error occurred while fetching user details:', error);
+                    toastr.error('Error fetching user details');
+                }
+            }
+
+            fetchUserDetails();
+
+            const visaForm = document.getElementById('visa-form');
+            visaForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                if (!validateForm()) {
+                    showSnackbar('Please fill all required fields', 'error');
+                    return;
+                }
+
+                const loadingOverlay = document.getElementById('loading-overlay');
+                loadingOverlay.style.display = 'flex';
+
+                const csrftoken = document.getElementById('csrf_token').value;
+
+                const data = {
+                    username: document.getElementById('username').value,
+                    emp_id: document.getElementById('emp_id').value,
+                    email: document.getElementById('email').value,
+                    group: document.getElementById('group').value,
+                    department: document.getElementById('department').value,
+                    Visacountry_name: document.getElementById('Visacountry_name').value,
+                    Visadocument_type: document.getElementById('Visadocument_type').value,
+                    Visacategory: document.getElementById('Visacategory').value,
+                    Visasub_category: document.getElementById('Visasub_category').value,
+                    Visadocument_number: document.getElementById('Visadocument_number').value,
+                    Visaissued_by: document.getElementById('Visaissued_by').value,
+                    Visaissued_at: document.getElementById('Visaissued_at').value,
+                    Visaissued_date: document.getElementById('Visaissued_date').value,
+                    Visaissuing_authority: document.getElementById('Visaissuing_authority').value,
+                    Visavalid_from: document.getElementById('Visavalid_from').value,
+                    Visavalid_to: document.getElementById('Visavalid_to').value,
+                    Visaverified_by: document.getElementById('Visaverified_by').value,
+                    Visaverified_date: document.getElementById('Visaverified_date').value,
+                    visa_number: document.getElementById('visa_number').value,
+                    visa_type: document.getElementById('visa_type').value,
+                    sponsor_type: document.getElementById('sponsor_type').value,
+                    sponsor_name: document.getElementById('sponsor_name').value,
+                    sponsor_relationship: document.getElementById('sponsor_relationship').value,
+                    sponsor_number: document.getElementById('sponsor_number').value,
+                    sponsor_nationality: document.getElementById('sponsor_nationality').value,
+                    emirate: document.getElementById('emirate').value,
+                };
+
+                Object.keys(data).forEach(key => data[key] === null && delete data[key]);
+
+                try {
+                    const response = await axios.post(`${apiBaseUrl}hr/api/document-visa`, data, {
+                        headers: {
+                            "X-CSRFTOKEN": csrftoken,
+                            'Authorization': `Bearer ${authToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                    });
+
+                    if (response.status === 200) {
+                        await sendAdminNotification(document.getElementById('email').value);
+                        clearNonFixedFields();
+                        console.log('Submitted Application:', response.data);
+                        showSnackbar('Visa card submitted successfully');
+                    } else {
+                        showSnackbar('Visa card submission failed');
+                    }
+                } catch (error) {
+                    console.error('Error submitting visa card:', error);
+                    if (error.response && error.response.data) {
+                        console.error('Error details:', error.response.data);
+                    } else {
+                        console.error('Error occurred:', error.message);
+                    }
+
+                    showSnackbar('An error occurred while submitting the document');
+                } finally {
+                    loadingOverlay.style.display = 'none';
+                }
+            });
+        });
+
+        function clearNonFixedFields() {
+            const fieldsToReset = [
+                'Visacountry_name', 'Visadocument_type', 'Visacategory', 'Visasub_category',
+                'Visadocument_number', 'Visaissued_by', 'Visaissued_at', 'Visaissued_date',
+                'Visaissuing_authority', 'Visavalid_from', 'Visavalid_to', 'Visaverified_by',
+                'Visaverified_date', 'visa_number', 'visa_type', 'sponsor_type',
+                'sponsor_name', 'sponsor_relationship', 'sponsor_number',
+                'sponsor_nationality', 'emirate',
+            ];
+
+            fieldsToReset.forEach(fieldId => {
+                document.getElementById(fieldId).value = '';
+            });
+        }
+
+        function showSnackbar(message, type = 'success', duration = 3000) {
+            const snackbar = document.getElementById("snackbar");
+            snackbar.textContent = message;
+            snackbar.className = "show";
+            if (type === 'error') {
+                snackbar.classList.add("error");
+            } else {
+                snackbar.classList.remove("error");
+            }
+            setTimeout(function () {
+                snackbar.className = snackbar.className.replace("show", "");
+            }, duration);
+        }
+
+        function navigateToHistory() {
+            window.location.href = '/hr/DocumentVisa/documentforvisahistory';
+        }
+
+    </script>
+</body>
+
+</html>

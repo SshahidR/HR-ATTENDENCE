@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            background-color: #ffffff;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .header {
+            text-align: left;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .user-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            color: #333;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .user-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .time-info {
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .time-info h2 {
+            font-size: 72px;
+            margin: 0;
+            color: #333;
+        }
+
+        .time-info p {
+            font-size: 18px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .attendance-container {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .attendance-button {
+            width: 180px;
+            height: 180px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .attendance-button-inner {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .attendance-button i {
+            font-size: 50px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .attendance-button span {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .checked-in .attendance-button-inner i {
+            color: red;
+        }
+
+        .attendance-details {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .detail {
+            flex: 1;
+        }
+
+        .detail:nth-child(1) i{
+            font-size: 28px;
+            color: #4caf50;
+            margin-bottom: 10px;
+        }
+        .detail:nth-child(2) i{
+            font-size: 28px;
+            color: #F44336;
+            margin-bottom: 10px;
+        }
+        .detail:nth-child(3) i{
+            font-size: 28px;
+            color: #2196f3;
+            margin-bottom: 10px;
+        }
+
+        .detail p {
+            margin: 5px 0;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .detail span {
+            color: #666;
+            font-size: 14px;
+        }
+
+        #cameraView {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background-color: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        #cameraPreview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #captureButton {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Hey <span id="username">User</span>!</h1>
+            <p>Good morning, mark your attendance</p>
+            <div class="user-image" id="userImageContainer">
+                <i class="fas fa-user"></i> <!-- Default user icon -->
+            </div>
+        </div>
+        <div class="time-info">
+            <h2 id="currentTime">00:00</h2>
+            <p id="currentDate">Loading...</p>
+        </div>
+        <div class="attendance-container">
+            <div class="attendance-button" id="attendanceButton">
+                <div class="attendance-button-inner">
+                    <i class="fas fa-hand-pointer" id="attendanceIcon"></i>
+                    <span id="attendanceText">Check In</span>
+                </div>
+            </div>
+        </div>
+        <div class="attendance-details">
+            <div class="detail">
+                <i class="fas fa-check-circle icons1"></i>
+                <p>Check In</p>
+                <span id="checkInTime">--:--</span>
+            </div>
+            <div class="detail">
+                <i class="fas fa-sign-out-alt icons2"></i>
+                <p>Check Out</p>
+                <span id="checkOutTime">--:--</span>
+            </div>
+            <div class="detail">
+                <i class="fas fa-hourglass-end icons3"></i>
+                <p>Total Hrs</p>
+                <span id="totalHours">--:--</span>
+            </div>
+        </div>
+        
+        <div id="cameraView">
+            <video id="cameraPreview" autoplay playsinline></video>
+            <button id="captureButton">Capture</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const attendanceButtonElement = document.getElementById('attendanceButton');
+            const checkInTimeElement = document.getElementById('checkInTime');
+            const checkOutTimeElement = document.getElementById('checkOutTime');
+            const totalHoursElement = document.getElementById('totalHours');
+            const cameraViewElement = document.getElementById('cameraView');
+            const cameraPreviewElement = document.getElementById('cameraPreview');
+            const captureButtonElement = document.getElementById('captureButton');
+            const userImageContainer = document.getElementById('userImageContainer');
+            const usernameElement = document.getElementById('username');
+            const attendanceIcon = document.getElementById('attendanceIcon');
+            const attendanceText = document.getElementById('attendanceText');
+            const currentTimeElement = document.getElementById('currentTime');
+            const currentDateElement = document.getElementById('currentDate');
+        
+            let isCheckIn = false;
+            let stream;
+            let checkInTime;
+            let checkOutTime;
+            let currentUsername = '';
+        
+            function saveToLocalStorage(key, value) {
+                console.log(`Attempting to save to localStorage: ${currentUsername}_${key} = ${value}`);
+                console.log('Value type:', typeof value);
+                if (value === null || value === undefined) {
+                    console.log(`Removing ${key} from localStorage due to null/undefined value`);
+                    localStorage.removeItem(`${currentUsername}_${key}`);
+                } else {
+                    console.log(`Setting ${key} in localStorage`);
+                    localStorage.setItem(`${currentUsername}_${key}`, value);
+                }
+                const savedValue = localStorage.getItem(`${currentUsername}_${key}`);
+                console.log(`Verification: ${key} = ${savedValue}`);
+            }
+        
+            function getFromLocalStorage(key) {
+                return localStorage.getItem(`${currentUsername}_${key}`);
+            }
+        
+            function clearUserData() {
+                console.log('Clearing user data');
+                localStorage.removeItem(`${currentUsername}_isCheckedIn`);
+                localStorage.removeItem(`${currentUsername}_checkIn`);
+                localStorage.removeItem(`${currentUsername}_checkOut`);
+                localStorage.removeItem(`${currentUsername}_totalHours`);
+            }
+        
+            function getAuthToken() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'auth_token') {
+                        return decodeURIComponent(value);
+                    }
+                }
+                return null;
+            }
+        
+            const token = getAuthToken();
+        
+            function updateTimeAndDate() {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                currentTimeElement.textContent = `${hours}:${minutes}`;
+        
+                const options = { weekday: 'long', month: 'long', day: 'numeric' };
+                currentDateElement.textContent = now.toLocaleDateString('en-US', options);
+            }
+        
+            function updateAttendanceButton(isCheckedIn) {
+                if (isCheckedIn) {
+                    attendanceButtonElement.classList.add('checked-in');
+                    attendanceIcon.style.color = 'red';
+                    attendanceText.textContent = 'Check Out';
+                } else {
+                    attendanceButtonElement.classList.remove('checked-in');
+                    attendanceIcon.style.color = '';
+                    attendanceText.textContent = 'Check In';
+                }
+        
+                saveToLocalStorage('isCheckedIn', isCheckedIn ? 'true' : 'false');
+            }
+        
+            function getLastStoredDate() {
+                return localStorage.getItem(`${currentUsername}_lastStoredDate`);
+            }
+        
+            function setLastStoredDate(date) {
+                localStorage.setItem(`${currentUsername}_lastStoredDate`, date);
+            }
+        
+            function checkAndResetDate() {
+                const currentDate = new Date().toDateString();
+                const lastStoredDate = getLastStoredDate();
+        
+                if (currentDate !== lastStoredDate) {
+                    console.log('Date has changed. Resetting user data.');
+                    clearUserData();
+        
+                    checkInTimeElement.textContent = '--:--';
+                    checkOutTimeElement.textContent = '--:--';
+                    totalHoursElement.textContent = '--:--';
+        
+                    updateAttendanceButton(false);
+                    isCheckIn = false;
+        
+                    setLastStoredDate(currentDate);
+                    return true; // Date has changed
+                }
+                return false; // Date hasn't changed
+            }
+            
+            function formatTime(date) {
+                return date.toTimeString().split(' ')[0];
+            }
+        
+            async function fetchUserDetails() {
+                try {
+                    if (!token) {
+                        throw new Error('No auth token found');
+                    }
+        
+                    const response = await axios.get('http://127.0.0.1:8000/hr/api/user_details', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+        
+                    const userData = response.data;
+                    currentUsername = userData.username || 'User';
+                    usernameElement.textContent = currentUsername;
+                    if (userData.user_image) {
+                        userImageContainer.innerHTML = `<img src="data:image/jpeg;base64,${userData.user_image}" alt="User">`;
+                    } else {
+                        createAvatarWithInitials(currentUsername);
+                    }
+        
+                    const dateChanged = checkAndResetDate();
+        
+                    if (!dateChanged) {
+                        const savedCheckInTime = getFromLocalStorage('checkIn');
+                        const savedCheckOutTime = getFromLocalStorage('checkOut');
+                        const savedTotalHours = getFromLocalStorage('totalHours');
+                        const savedIsCheckedIn = getFromLocalStorage('isCheckedIn');
+        
+                        if (savedCheckInTime) {
+                            checkInTimeElement.textContent = savedCheckInTime;
+                            checkInTime = savedCheckInTime;
+                        } else {
+                            checkInTimeElement.textContent = '--:--';
+                        }
+        
+                        if (savedCheckOutTime && savedCheckOutTime !== '') {
+                            checkOutTimeElement.textContent = savedCheckOutTime;
+                            checkOutTime = savedCheckOutTime;
+                        } else {
+                            checkOutTimeElement.textContent = '--:--';
+                            checkOutTime = null;
+                        }
+                        
+                        if (savedTotalHours) {
+                            totalHoursElement.textContent = savedTotalHours;
+                        } else {
+                            totalHoursElement.textContent = '--:--';
+                        }
+        
+                        isCheckIn = savedIsCheckedIn === 'true';
+                        updateAttendanceButton(isCheckIn);
+                    }
+        
+                    updateTimeAndDate();
+                    setInterval(updateTimeAndDate, 1000);
+        
+                    attendanceButtonElement.addEventListener('click', handleAttendanceButtonClick);
+                    captureButtonElement.addEventListener('click', captureImage);
+                } catch (error) {
+                    console.error('Error fetching user details:', error);
+                    alert('Failed to fetch user details. Please try logging in again.');
+                }
+            }
+        
+            function createAvatarWithInitials(name) {
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                userImageContainer.innerHTML = `<span>${initials}</span>`;
+            }
+        
+            async function handleAttendanceButtonClick() {
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                    cameraPreviewElement.srcObject = stream;
+                    cameraViewElement.style.display = 'block';
+                } catch (error) {
+                    console.error('Error accessing camera:', error);
+                    alert('Unable to access the camera. Please make sure you have given permission and are using a secure connection (HTTPS or localhost).');
+                }
+            }
+        
+            async function captureImage() {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = cameraPreviewElement.videoWidth;
+                    canvas.height = cameraPreviewElement.videoHeight;
+                    const context = canvas.getContext('2d');
+                    context.drawImage(cameraPreviewElement, 0, 0);
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        
+                    // Convert image to grayscale
+                    for (let i = 0; i < imageData.data.length; i += 4) {
+                        const avg = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3;
+                        imageData.data[i] = avg;
+                        imageData.data[i + 1] = avg;
+                        imageData.data[i + 2] = avg;
+                    }
+        
+                    context.putImageData(imageData, 0, 0);
+                    const grayscaleImageDataUrl = canvas.toDataURL('image/jpeg').split(',')[1];
+        
+                    if (!isCheckIn) {
+                        await checkIn(grayscaleImageDataUrl);
+                    } else {
+                        await checkOut(grayscaleImageDataUrl);
+                    }
+        
+                    cameraViewElement.style.display = 'none';
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                    }
+                } catch (error) {
+                    console.error('Error capturing image:', error);
+                    alert('Error capturing image: ' + error.message);
+                }
+            }
+        
+            async function checkIn(imageData) {
+                try {
+                    const response = await axios.post('http://127.0.0.1:8000/hr/api/attendance/checkin', 
+                        { image_data: imageData }, 
+                        {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    );
+            
+                    const data = response.data;
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+            
+                    console.log('Check-in response:', data);
+            
+                    const currentTime = new Date();
+                    const formattedCheckInTime = formatTime(currentTime);
+            
+                    checkInTimeElement.textContent = formattedCheckInTime;
+                    saveToLocalStorage('checkIn', formattedCheckInTime);
+                    saveToLocalStorage('isCheckedIn', 'true');
+            
+                    // Reset check-out and total hours
+                    checkOutTimeElement.textContent = '--:--:--';
+                    totalHoursElement.textContent = '--:--:--';
+                    saveToLocalStorage('checkOut', '');
+                    saveToLocalStorage('totalHours', '');
+            
+                    updateAttendanceButton(true);
+                    isCheckIn = true;
+                    checkInTime = formattedCheckInTime;
+            
+                    alert('Check-in successful');
+                } catch (error) {
+                    console.error('Error during check-in:', error);
+                    alert('Error during check-in: ' + error.message);
+                }
+            }
+            
+            async function checkOut(imageData) {
+                try {
+                    const response = await axios.post('http://127.0.0.1:8000/hr/api/attendance/checkout', 
+                        { image_data: imageData }, 
+                        {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    );
+            
+                    const data = response.data;
+                    console.log('Full server response:', data);
+            
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+            
+                    const currentTime = new Date();
+                    const formattedCheckOutTime = formatTime(currentTime);
+            
+                    console.log('Check-out time:', formattedCheckOutTime);
+                    console.log('Total hours from server:', data.total_hours);
+            
+                    checkOutTimeElement.textContent = formattedCheckOutTime;
+                    totalHoursElement.textContent = data.total_hours || '--:--:--';
+            
+                    console.log('About to save checkOut:', formattedCheckOutTime);
+                    console.log('About to save totalHours:', data.total_hours);
+            
+                    saveToLocalStorage('checkOut', formattedCheckOutTime);
+                    saveToLocalStorage('totalHours', data.total_hours);
+                    saveToLocalStorage('isCheckedIn', 'false');
+            
+                    updateAttendanceButton(false);
+                    isCheckIn = false;
+            
+                    checkOutTime = formattedCheckOutTime;
+            
+                    alert('Check-out successful');
+            
+                    console.log('Saved checkOut:', getFromLocalStorage('checkOut'));
+                    console.log('Saved totalHours:', getFromLocalStorage('totalHours'));
+                    console.log('Saved isCheckedIn:', getFromLocalStorage('isCheckedIn'));
+                } catch (error) {
+                    console.error('Error during check-out:', error);
+                    alert('Error during check-out: ' + error.message);
+                }
+            }
+        
+            // Initial setup
+            fetchUserDetails();
+        });
+        
+    </script>   
+      
+</body>
+</html>

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Reimbursement</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+h1 {
+    font-size: 25px;
+    text-align: start;
+    margin-left: 10px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    background-color: #333;
+    color: white;
+}
+
+.navbar-heading {
+    font-size:20px;
+    margin-left: 20px;
+}
+
+.nav-right, .nav-left {
+    position: relative;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.backbtn {
+    background-color: inherit;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.form-select {
+    font-size: 13px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: inherit;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.heading1 {
+    text-align: start;
+    font-size: 15px;
+}
+
+.nav-right {
+    position: relative;
+}
+
+.tooltip {
+    visibility: hidden;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #555;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    z-index: 1;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.nav-right:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.input-field, .select-field {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: black;
+}
+
+.select-field {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>') no-repeat right 10px center;
+    background-size: 12px;
+}
+
+.input-field::placeholder {
+    color: black;
+}
+
+.icon {
+    position: absolute;
+    left: 10px;
+    top: 38px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 0.2rem;
+    margin-top: 0;
+}
+
+.input-field.error, .select-field.error {
+    border-color: red;
+}
+
+.icon i {
+    color: black;
+    font-size: 14px;
+}
+
+.label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.save-button {
+    width: 20%;
+    padding: 10px;
+    border: none;
+    background-color: #0f0f0f;
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: calc(45% - 55px);
+    margin-bottom: 20px;
+}
+
+#snackbar {
+    visibility: hidden;
+    width: 350px;
+    height: 50px;
+    margin-left: -125px;
+    background-color: green;
+    color: white;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+#snackbar.error {
+    background-color: #f44336;
+    color: white;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+.container {
+    height: 100%;
+    width: 50%;
+    background-color: white;
+    margin: 20px;
+    padding: 20px;
+}
+
+.heading {
+    font-size: 15px;
+    text-align: start;
+}
+
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.form-label {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 0.1rem;
+}
+
+.col-12 {
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    font-size: 13px;
+    padding: 8px 8px 8px 10px;
+}
+
+.mb-4 {
+    margin-bottom: 0.6rem !important;
+}
+
+.mb-3 {
+    margin-bottom: 0.6rem !important;
+}
+
+.col-md-6 {
+    padding-bottom: 0.5rem;
+}
+
+.save-button {
+    margin-top: 0.5rem;
+}
+
+.space {
+    margin-top: -0.5rem;
+}
+
+@media (max-width: 767px) {
+    .col-md-6:nth-child(2) {
+        margin-top: -0.5rem;
+    }
+
+    .mb-3 {
+        margin-bottom: 0.5rem !important;
+    }
+  
+    .col-md-6 {
+        padding-bottom: 0.5rem;
+    }
+  
+    .save-button {
+        margin-top: 0.5rem;
+    }
+
+    .space {
+        margin-top: 0;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar bg-dark text-white">
+            <div class="container-fluid">
+                <h2 class="navbar-heading">Medical Reimbursement</h2>
+                <div class="nav-right">
+                    <div class="dropdown">
+                        <button class="btn btn-link text-white dropbtn" onclick="navigateToHistory()">⋮</button>
+                        <span class="tooltip">History</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <h1 class="mt-4">Medical Reimbursement Report-Application</h1>
+        <form id="medical-form" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+            <div class="col">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Employee Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <input type="text" id="username" class="form-control" placeholder="Employee Name" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="emp_id" class="form-label">Employee ID</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                        <input type="text" id="emp_id" class="form-control" placeholder="Employee ID" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                        <input type="text" id="email" class="form-control" placeholder="Email" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="group" class="form-label">Business Group</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        <input type="text" id="group" class="form-control" placeholder="Business Group">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3 ">
+                    <label for="department" class="form-label">Department</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        <input type="text" id="department" class="form-control" placeholder="Department" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="medicalreimbursement_reason" class="form-label">Reason</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <select class="form-select" id="medicalreimbursement_reason">
+                            <option value="" selected disabled hidden>Select Reason</option>
+                            <option value="New">New</option>
+                            <option value="Renewal">Renewal</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="type_of_claim" class="form-label">Type of Medical Claim</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                        <select class="form-select" id="type_of_claim">
+                            <option value="" selected disabled hidden>Select Type of Claim</option>
+                            <option value="Normal Medical Fees">Normal Medical Fees</option>
+                            <option value="Urgent Medical Fees">Urgent Medical Fees</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3 ">
+                    <label for="amount_aed" class="form-label">Amount(AED)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-bars"></i></span>
+                        <input type="number" id="amount_aed" class="form-control" placeholder="Amount(AED)">
+                    </div>
+                </div>
+            </div>
+            <div class="col">                  
+                <div class="mb-3">
+                    <label for="medicalReimbursement_comments" class="form-label mb-1">Comment</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        <input type="text" id="medicalReimbursement_comments" class="form-control" placeholder="Comment">
+                    </div>
+                </div>
+            </div>
+    </div>
+            
+            <div class="col-12">
+                <button type="submit" class="btn btn-dark save-button">Apply</button>
+            </div>
+        </form>
+        <div id="snackbar">Application Sent Successfully</div>
+        <div id="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            function getAuthToken() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'auth_token') {
+                        return decodeURIComponent(value);
+                    }
+                }
+                return null;
+            }
+            const authToken = getAuthToken();
+            const apiBaseUrl = 'http://127.0.0.1:8000';
+            console.log("Authentication Token:", authToken);
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            async function sendAdminNotification(email) {
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/hr/api/send_admin_notification', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`,
+                        },
+                        body: JSON.stringify({
+                            subject: 'Medical Reimbursement Application',
+                            message: `Medical Reimbursement Application submitted by Employee with email ${email}.`,
+                            recipients: ['farhanabadubhai@gmail.com'],
+                        }),
+                    });
+                   
+                   if (response.ok) {
+                       console.log('Admin notification sent successfully');
+                   } else {
+                       const errorText = await response.text();
+                       console.error('Failed to send admin notification:', errorText);
+                   }
+               } catch (error) {
+                   console.error('Error occurred while sending admin notification:', error.message);
+               }
+           }
+          
+           async function fetchUserDetails() {
+               try {
+                   const response = await axios.get('http://127.0.0.1:8000/hr/api/user_details', {
+                       headers: { 'Authorization': `Bearer ${authToken}` }
+                   });
+                  
+                   if (response.status === 200) {
+                       const data = response.data;
+                       document.getElementById('username').value = `${data.first_name} ${data.last_name}`;
+                       document.getElementById('emp_id').value = data.emp_id;
+                       document.getElementById('email').value = data.email;
+                       document.getElementById('department').value = data.department;
+                   } else {
+                       console.error('Failed to fetch user details:', response.data);
+                       toastr.error('Failed to fetch user details');
+                   }
+               } catch (error) {
+                   console.error('Error fetching user details:', error);
+                   toastr.error('Error fetching user details');
+               }
+           }
+
+           fetchUserDetails();
+
+           function validateForm() {
+               const requiredFields = [
+                   {id: 'username', message: 'Employee Name is required'},
+                   {id: 'emp_id', message: 'Employee ID is required'},
+                   {id: 'email', message: 'Email is required'},
+                   {id: 'department', message: 'Department is required'},
+                   {id: 'group', message: 'Business Group is required'},
+                   {id: 'medicalreimbursement_reason', message: 'Reason is required'},
+                   {id: 'type_of_claim', message: 'Type of claim is required'},
+                   {id: 'amount_aed', message: 'Amount (AED) is required'},
+                   {id: 'medicalReimbursement_comments', message: 'Comments are required'},
+               ];
+               let isValid = true;
+
+               requiredFields.forEach(field => {
+                   const element = document.getElementById(field.id);
+                   if (!element.value.trim()) {
+                       isValid = false;
+                       element.classList.add('error');
+                       showError(element, field.message);
+                   } else {
+                       element.classList.remove('error');
+                       removeError(element);
+                   }
+               });
+
+               return isValid;
+           }
+
+           function showError(field, message) {
+               let errorElement = field.parentNode.querySelector('.error-message');
+               if (!errorElement) {
+                   errorElement = document.createElement('div');
+                   errorElement.className = 'error-message';
+                   field.parentNode.appendChild(errorElement);
+               }
+               errorElement.textContent = message;
+           }
+
+           function removeError(field) {
+               const errorElement = field.parentNode.querySelector('.error-message');
+               if (errorElement) {
+                   errorElement.remove();
+               }
+           }
+
+           const medicalForm = document.getElementById('medical-form');
+           medicalForm.addEventListener('submit', async (event) => {
+               event.preventDefault();
+               if (!validateForm()) {
+                   showSnackbar('Please fill all required fields', 'error');
+                   return;
+               }
+
+               const loadingOverlay = document.getElementById('loading-overlay');
+               loadingOverlay.style.display = 'flex';
+
+               const data = {
+                   username: document.getElementById('username').value,
+                   emp_id: document.getElementById('emp_id').value,
+                   email: document.getElementById('email').value,
+                   department: document.getElementById('department').value,
+                   group: document.getElementById('group').value,
+                   medicalreimbursement_reason: document.getElementById('medicalreimbursement_reason').value,
+                   type_of_claim: document.getElementById('type_of_claim').value,
+                   amount_aed: parseFloat(document.getElementById('amount_aed').value),
+                   medicalReimbursement_comments: document.getElementById('medicalReimbursement_comments').value,
+                   medicalReimbursement_status: 'pending'
+               };
+
+               try {
+                   const response = await axios.post('http://127.0.0.1:8000/hr/api/medical-reimbursement', data, {
+                       headers: {
+                           'Authorization': `Bearer ${authToken}`,
+                           'Content-Type': 'application/json'
+                       },
+                   });
+
+                   if (response.status === 200) {
+                       await sendAdminNotification(document.getElementById('email').value);
+                       clearNonFixedFields();
+                       console.log('Submitted Application:', response.data);
+                       showSnackbar('Medical application submitted successfully');
+                   } else {
+                       showSnackbar('Medical application submission failed');
+                   }
+               } catch (error) {
+                   console.error('Error submitting application:', error);
+                   if (error.response) {
+                       console.error('Response data:', error.response.data);
+                       console.error('Response status:', error.response.status);
+                       showSnackbar(`Error: ${error.response.data.message || 'Unknown error occurred'}`);
+                   } else if (error.request) {
+                       console.error('No response received:', error.request);
+                       showSnackbar('No response received from the server');
+                   } else {
+                       console.error('Error setting up request:', error.message);
+                       showSnackbar(`Error: ${error.message}`);
+                   }
+               } finally {
+                   loadingOverlay.style.display = 'none';
+               }
+           });
+
+           function clearNonFixedFields() {
+               const fieldsToReset = [
+                   'medicalreimbursement_reason', 'group', 'type_of_claim', 'amount_aed', 'medicalReimbursement_comments',
+               ];
+              
+               fieldsToReset.forEach(fieldId => {
+                   document.getElementById(fieldId).value = '';
+               });
+           }
+
+           function showSnackbar(message, type = 'success', duration = 3000) {
+               const snackbar = document.getElementById("snackbar");
+               snackbar.textContent = message;
+               snackbar.className = "show";
+               if (type === 'error') {
+                   snackbar.classList.add("error");
+               } else {
+                   snackbar.classList.remove("error");
+               }
+               setTimeout(function() {
+                   snackbar.className = snackbar.className.replace("show", "");
+               }, duration);
+           }
+
+           const requiredFields = [
+               {id: 'username', message: 'Employee Name is required'},
+               {id: 'emp_id', message: 'Employee ID is required'},
+               {id: 'email', message: 'Email is required'},
+               {id: 'department', message: 'Department is required'},
+               {id: 'group', message: 'Business Group is required'},
+               {id: 'medicalreimbursement_reason', message: 'Reason is required'},
+               {id: 'type_of_claim', message: 'Type of claim is required'},
+               {id: 'amount_aed', message: 'Amount (AED) is required'},
+               {id: 'medicalReimbursement_comments', message: 'Comments are required'},
+           ];
+
+           requiredFields.forEach(field => {
+               const element = document.getElementById(field.id);
+               element.addEventListener('blur', () => {
+                   if (!element.value.trim()) {
+                       element.classList.add('error');
+                       showError(element, field.message);
+                   } else {
+                       element.classList.remove('error');
+                       removeError(element);
+                   }
+               });
+           });
+       });
+
+       function navigateToHistory() {
+           window.location.href = '/hr/MedicalReimbursement/medicalreimbursementhistory';
+       }
+   </script>
+</body>
+</html>
+

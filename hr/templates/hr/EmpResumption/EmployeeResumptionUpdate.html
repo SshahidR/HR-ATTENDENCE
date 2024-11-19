@@ -1,0 +1,501 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Resumption Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+         h1{
+            font-size:15px;
+            text-align:start;
+            margin-left: 10px;
+            font-weight: bold;
+            margin-top: 8px;
+          }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            background-color: #333;
+            color: white;
+        }
+        .navbar-heading {
+            font-size:15px;
+            margin-left: 20px;
+        }
+        .nav-right, .nav-left {
+            position: relative;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+        .form-select{
+        font-size: 13px;
+       }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+        .heading1{
+            text-align: start;
+            font-size: 15px;
+        }
+        .tooltip {
+            display: none;
+            position: absolute;
+            top: -5px;
+            right: 35px;
+            background-color: #555;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            z-index: 1;
+            font-size: 12px;
+        }
+        .nav-right:hover .tooltip {
+            display: block;
+        }
+        .input-field, .select-field {
+           width: 100%;
+           padding: 10px 10px 10px 40px;
+           border: 1px solid #ccc;
+           border-radius: 4px;
+           box-sizing: border-box;
+           color: black;
+       }
+       .select-field {
+           appearance: none;
+           -webkit-appearance: none;
+           -moz-appearance: none;
+           background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>') no-repeat right 10px center;
+           background-size: 12px;
+       }
+       .input-field::placeholder {
+           color: black;
+       }
+       .icon {
+            position: absolute;
+            left: 10px;
+            top: 38px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 0.2rem;
+            margin-top: 0;
+            
+
+        }
+        .input-field.error, .select-field.error {
+           border-color: red;
+       }
+        .icon i {
+            color: black;
+            font-size: 14px;
+        }
+        .label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size:12px;
+        }
+        .save-button {
+            width: 20%;
+            padding: 10px;
+            border: none;
+            background-color: #0f0f0f;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: calc(50% - 55px);
+            margin-bottom: 20px;
+        }
+        #snackbar {
+            visibility: hidden;
+            width: 350px;
+            height:50px;
+            margin-left: -125px;
+            background-color: green;
+            color: white;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+        }
+        #snackbar.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        #snackbar.error {
+            background-color: #f44336;
+            color: white;
+        }
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+        .container{
+            height:100%;
+            width:50%;
+            background-color:white;
+            margin:20px;
+            padding:20px;
+        }
+        .heading{
+            font-size:15px;
+            text-align:start;
+        }
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .form-label{
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 0.1rem;
+       }
+       .col-12 {
+    margin-bottom: 0.5rem;
+}
+       .form-control{
+        font-size: 13px;
+        padding: 8px 8px 8px 10px;
+       }
+       .mb-4 {
+    margin-bottom: 0.5rem !important;
+}
+       .mb-3 {
+            margin-bottom: 0.9rem !important;
+        }
+
+        .col-md-6 {
+        padding-bottom: 0.5rem;
+        }
+
+        .save-button {
+        margin-top: 0.5rem;
+        }
+        .space{
+          
+            margin-top: -0.5rem;
+        }
+        #loading-overlay {
+    display: none;
+    /* Baaki properties same rahenge */
+}
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar">
+            <div class="nav-left">
+                <button class="backbtn" onclick="navigateBack()"><i class="fas fa-arrow-left"></i></button>
+                <h2 class="navbar-heading">Edit EmployeeResumption Details</h2>
+            </div>
+        </nav>
+
+        <form id="resumption-form" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+            {% csrf_token %}
+            <div class="col">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Employee Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <input type="text" id="username" class="form-control" placeholder="Employee Name" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="emp_id" class="form-label">Employee ID</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                        <input type="text" id="emp_id" class="form-control" placeholder="Employee ID" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                        <input type="text" id="email" class="form-control" placeholder="Email" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="group" class="form-label">Business Group</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        <input type="text" id="group" class="form-control" placeholder="Business Group">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+            <div class="mb-3">
+                <label for="enter_date" class="form-label">Enter Date</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    <input type="date" id="enter_date" class="form-control" placeholder="enter_date">
+                </div>
+            </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="department" class="form-label">Department</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        <input type="text" id="department" class="form-control" placeholder="Department" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="resumption_status" class="form-label">Resumption Status</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-landmark"></i></span>
+                        <select class="form-select" id="resumption_status">
+                            <option value="" selected disabled hidden>Select Resumption Status</option>
+                            <option value="Overstayed without prior approval/intimation">Overstayed without prior approval/intimation</option>
+                            <option value="Reported for duty prior to expiry of leave">Reported for duty prior to expiry of leave</option>
+                            <option value="Report for duty without any overstay">Report for duty without any overstay</option>
+                            <option value="Overstayed without prior approval/intimation and is available for termination">Overstayed without prior approval/intimation and is available for termination</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="other" class="form-label">Others</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                        <input type="text" id="other" class="form-control" placeholder="other">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="days_overstayed" class="form-label">Days Overstayed</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                        <input type="text" id="days_overstayed" class="form-control" placeholder="days_overstayed">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="resumption_comment" class="form-label">Comment</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-bars"></i></span>
+                        <input type="text" id="resumption_comment" class="form-control" placeholder="Comment">
+                    </div>
+                </div>
+            </div>
+            </div>
+          
+                <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="your-csrf-token-here">
+                <button type="submit" class="btn btn-primary save-button">Update</button>
+        </form>
+        <div id="snackbar">Application Sent Successfully</div>
+        <div id="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const leaveId = params.get('id');
+            console.log('Leave ID:', leaveId);
+            if (leaveId) {
+                fetchLeaveDetails(leaveId);
+            } else {
+                console.error('Leave ID not found in query parameters.');
+                showSnackbar('Leave ID not found', 'error');
+            }
+
+            document.getElementById('resumption-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    saveDetails();
+});
+        });
+
+        function getAuthToken() {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'auth_token') {
+                    return decodeURIComponent(value);
+                }
+            }
+            return null;
+        }
+
+        const apiBaseUrl = 'http://127.0.0.1:8000';
+
+        function fetchLeaveDetails(leaveId) {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.style.display = 'flex';
+
+            axios.get(`${apiBaseUrl}/hr/api/data-employee-resumption/${leaveId}`, {
+                headers: {
+                    Authorization: `Bearer ${getAuthToken()}`
+                }
+            })
+            .then(response => {
+                const leaveDetails = response.data;
+                document.getElementById('username').value = leaveDetails.username;
+                document.getElementById('emp_id').value = leaveDetails.emp_id;
+                document.getElementById('email').value = leaveDetails.email;
+                document.getElementById('group').value = leaveDetails.group;
+                document.getElementById('department').value = leaveDetails.department;
+                document.getElementById('enter_date').value = leaveDetails.enter_date;
+                document.getElementById('resumption_status').value = leaveDetails.resumption_status;
+                document.getElementById('other').value = leaveDetails.other;
+                document.getElementById('days_overstayed').value = leaveDetails.days_overstayed;
+                document.getElementById('resumption_comment').value = leaveDetails.resumption_comment;
+            })
+            .catch(error => {
+                console.error('Error fetching leave details for editing:', error);
+                showSnackbar('Error fetching leave details', 'error');
+            })
+            .finally(() => {
+                loadingOverlay.style.display = 'none';
+            });
+        }
+
+        function saveDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const leaveId = params.get('id');
+    const loadingOverlay = document.getElementById('loading-overlay');
+
+    const data = {
+        username: document.getElementById('username').value,
+        emp_id: document.getElementById('emp_id').value,
+        email: document.getElementById('email').value,
+        group: document.getElementById('group').value,
+        department: document.getElementById('department').value,
+        enter_date: document.getElementById('enter_date').value,
+        resumption_status: document.getElementById('resumption_status').value,
+        other: document.getElementById('other').value,
+        days_overstayed: document.getElementById('days_overstayed').value,
+        resumption_comment: document.getElementById('resumption_comment').value,
+    };
+
+    loadingOverlay.style.display = 'flex';
+
+    axios.put(`${apiBaseUrl}/hr/api/employee_resumption-update/${leaveId}`, data, {
+        headers: {
+            Authorization: `Bearer ${getAuthToken()}`
+        }
+    })
+    .then(response => {
+        if (response.status === 200) {
+            showSnackbar('Resumption details updated successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '/hr/EmpResumption/EmployeeResumptionHistory';
+            }, 2000);
+        } else {
+            throw new Error('Update failed');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating leave details:', error.response ? error.response.data : error.message);
+        showSnackbar('Error updating leave details', 'error');
+    })
+    .finally(() => {
+        loadingOverlay.style.display = 'none';
+    });
+}
+        function navigateBack() {
+            window.history.back();
+        }
+
+        function showSnackbar(message, type = 'success') {
+            const snackbar = document.getElementById('snackbar');
+            snackbar.textContent = message;
+            snackbar.className = 'show ' + type;
+            setTimeout(() => { snackbar.className = snackbar.className.replace('show', ''); }, 3000);
+        }
+      
+    </script>
+</body>
+</html>

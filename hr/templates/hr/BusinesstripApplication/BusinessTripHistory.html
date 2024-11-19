@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            background-color: #333;
+            color: white;
+            width: 100%;
+            padding: 0 10px;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            
+    
+
+        }
+        h1{
+            font-size:25px;
+            text-align:start;
+            margin-left: 10px;
+            font-weight: bold;
+            margin-top: 10px;
+          }
+
+       
+        .navbar-heading {
+            font-size:15px;
+            margin-left: 20px;
+        }
+
+        .nav-right, .nav-left {
+            position: relative;
+        }
+        .main-container {
+            width: 100vw;
+            padding: 10px
+        ;
+        }
+        .container {
+            width: 100vw;
+            padding: 0;
+            
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .table-responsive {
+    width: 100%;
+}
+
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            padding-bottom: 18px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .no-data {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            padding-top: 60px;
+        }
+
+        .popup-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .history-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+        }
+
+        hr.solid {
+            border-top: 3px solid #bbb;
+            margin-top: 30px;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        .edit-btn, .delete-btn {
+        cursor: pointer;
+        color: #007bff;
+        font-size: 16px;
+        position: absolute;
+        top: 20px;
+        
+        }
+
+        .edit-btn {
+            left: 0px;
+        }
+
+        .delete-btn {
+            left: 30px;
+        }
+
+        .edit-btn:hover, .delete-btn:hover {
+            color: #0056b3;
+            
+        }
+
+        
+
+        .icons {
+            margin-left: 30px;
+            color: black;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .heading {
+            font-size: 15px;
+            text-align: start;
+        }
+        @media (min-width: 1000px) {
+            .container-xl, .container-lg, .container-md, .container-sm {
+                max-width: 1000px;
+            }
+        }
+
+        .table-heading {
+            font-size: 13px;
+        }
+        @media (max-width: 767px) {
+    .table-responsive {
+        font-size: 0.8rem;
+    }
+    .table th, .table td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100px;
+    }    }
+    .pagination-container {
+            background-color: whitesmoke;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-left: calc(40% - 55px);
+        }
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+        .pagination-button {
+            background-color: transparent;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-radius: 4px;
+        }
+        #page-numbers {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        #page-numbers::-webkit-scrollbar {
+            display: none;
+        }
+        .pagination-button, .page-number {
+            margin: 0 5px;
+        }
+        .pagination-button:hover {
+            background-color: white;
+        }
+        .pagination-button i {
+            margin: 0 5px;
+        }
+        .page-number {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 0 2px;
+            border: 1px solid #333;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .page-number.active {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+            <nav class="navbar">
+                <div class="nav-left">
+                    <button class="backbtn" onclick="navigateBack()"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="navbar-heading">Business Trip History </h2>
+                </div>
+            </nav>
+
+            <h1>History</h1>
+            <div class="table-responsive">
+            <table id="history-table">
+                <thead class="table-heading"  class="table table-striped table-sm">
+                    <tr>
+                        <th class="text-nowrap">Employee Name</th>
+                        <th class="text-nowrap">Employee ID</th>
+                        <th class="text-nowrap">Status</th>
+                        <th class="text-nowrap">Applied On</th>
+                        <th class="text-nowrap">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be dynamically populated here -->
+                </tbody>
+            </table>
+            </div>
+            <div id="no-data" class="no-data">No data available. Please fill in the details on the Bank Details page.</div>
+            <div class="pagination-container">
+                <div class="pagination-controls">
+                    <button class="pagination-button" id="prev-btn" onclick="prevPage()" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <div id="page-numbers"></div>
+                    <button class="pagination-button" id="next-btn" onclick="nextPage()" disabled>
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+
+            <!-- Popup to show full details -->
+            <div id="popup" class="popup">
+                <div class="popup-content">
+                    <span class="close" onclick="closePopup()">&times;</span>
+                    <div class="history-container">
+                        <i class="fas fa-pencil-alt edit-btn icons" onclick="editDetails()"></i>
+                        <i class="fas fa-trash-alt delete-btn icons" onclick="deleteDetails()"></i>
+                    </div>
+                    <hr class="solid">
+                    <div id="popup-details">
+                        <!-- Details will be filled dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Axios from a CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let businessTripList = [];
+        let currentIndex = null;
+        let currentPage = 1;
+        const rowsPerPage = 10;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const authToken = getAuthToken();
+    if (authToken) {
+        fetchBusinessTripHistory(authToken);
+    } else {
+        console.error('Authentication token not found.');
+        document.getElementById('no-data').style.display = 'block';
+    }
+});
+
+function getAuthToken() {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'auth_token') {
+            return decodeURIComponent(value);
+        }
+    }
+    return null;
+}
+
+function fetchBusinessTripHistory(authToken) {
+    axios.get('http://127.0.0.1:8000/hr/api/business-data', {
+        headers: {
+            Authorization: `Bearer ${authToken}`
+        }
+    })
+    .then(response => {
+        businessTripList = response.data;
+        displayBusinessTripHistory(businessTripList);
+    })
+    .catch(error => {
+        console.error('Error fetching business trip history:', error);
+        document.getElementById('no-data').style.display = 'block';
+    });
+}
+
+function displayBusinessTripHistory(businessTripList) {
+    const historyTableBody = document.querySelector('#history-table tbody');
+    const noDataDiv = document.getElementById('no-data');
+    const totalPages = Math.ceil(businessTripList.length / rowsPerPage);
+
+    if (businessTripList.length === 0) {
+        noDataDiv.style.display = 'block';
+        historyTableBody.innerHTML = '';
+        document.getElementById('page-numbers').innerHTML = '';
+        document.getElementById('prev-btn').disabled = true;
+        document.getElementById('next-btn').disabled = true;
+    } else {
+        noDataDiv.style.display = 'none';
+        historyTableBody.innerHTML = '';
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = Math.min(start + rowsPerPage, businessTripList.length);
+
+        for (let i = start; i < end; i++) {
+            const details = businessTripList[i];
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="text-nowrap">${details.username}</td>
+                <td class="text-nowrap">${details.emp_id}</td>
+                <td class="text-nowrap">${details.businessTrip_status}</td>
+                <td class="text-nowrap">${details.businessTrip_applied_date}</td>
+                <td>
+                    <i class="far fa-eye view-btn" onclick="viewDetails(${details.id})"></i>
+                </td>
+            `;
+            historyTableBody.appendChild(row);
+        }
+
+        const pageNumbers = document.getElementById('page-numbers');
+        pageNumbers.innerHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+            const pageNum = document.createElement('span');
+            pageNum.className = `page-number ${i === currentPage ? 'active' : ''}`;
+            pageNum.textContent = i;
+            pageNum.onclick = () => goToPage(i);
+            pageNumbers.appendChild(pageNum);
+        }
+
+        document.getElementById('prev-btn').disabled = currentPage === 1;
+        document.getElementById('next-btn').disabled = currentPage === totalPages;
+    }
+}
+
+function viewDetails(id) {
+    const details = businessTripList.find(item => item.id === id);
+    currentIndex = id;
+
+    const popup = document.getElementById('popup');
+    const popupDetails = document.getElementById('popup-details');
+
+    popupDetails.innerHTML = `
+        <p><strong>Employee Name:</strong> ${details.username}</p>
+        <p><strong>Employee ID:</strong> ${details.emp_id}</p>
+        <p><strong>Email:</strong> ${details.email}</p>
+        <p><strong>Business Group:</strong> ${details.group}</p>
+        <p><strong>Department:</strong> ${details.department}</p>
+        <p><strong>Country Travel To:</strong> ${details.country_travel_to}</p>
+        <p><strong>Reason:</strong> ${details.businesstrip_reason}</p>
+        <p><strong>Reimbursement Amount:</strong> ${details.reimbursement_amount}</p>
+        <p><strong>Travel Request:</strong> ${details.travel_request}</p>
+        <p><strong>Mode Of Payment:</strong> ${details.mode_of_payment}</p>
+        <p><strong>Amount To Be Paid Back:</strong> ${details.amount_to_be_paid_back}</p>
+        <p><strong>Effective Date:</strong> ${details.effective_date}</p>
+        <p><strong>Applied On:</strong> ${details.businessTrip_applied_date}</p>
+        <p><strong>Comments:</strong> ${details.businessTrip_comments}</p>
+        <p><strong>Status:</strong> ${details.businessTrip_status}</p>
+    `;
+
+    const editBtn = document.querySelector('.edit-btn');
+    const deleteBtn = document.querySelector('.delete-btn');
+
+    if (details.businessTrip_status === 'confirmed' || details.businessTrip_status === 'approved' || details.businessTrip_status === 'rejected') {
+        editBtn.style.color = 'red';
+        deleteBtn.style.color = 'red';
+        editBtn.style.pointerEvents = 'none';
+        deleteBtn.style.pointerEvents = 'none';
+    } else {
+        editBtn.style.color = '#007bff';
+        deleteBtn.style.color = '#007bff';
+        editBtn.style.pointerEvents = 'auto';
+        deleteBtn.style.pointerEvents = 'auto';
+    }
+
+    popup.style.display = 'block';
+}
+
+function closePopup() {
+    const popup = document.getElementById('popup');
+    popup.style.display = 'none';
+}
+
+function editDetails() {
+    const details = businessTripList.find(item => item.id === currentIndex);
+
+    axios.get(`http://127.0.0.1:8000/hr/api/data-business-trip/${details.id}`, {
+        headers: {
+            Authorization: `Bearer ${getAuthToken()}`
+        }
+    })
+    .then(response => {
+        const businessTripDetails = response.data;
+        businessTripDetails.id = details.id;
+        const queryString = Object.keys(businessTripDetails).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(businessTripDetails[key])}`).join('&');
+        window.location.href = `/hr/BusinesstripApplication/BusinessTripEdit?${queryString}`;
+    })
+    .catch(error => {
+        console.error('Error fetching business trip details for editing:', error);
+        alert('An error occurred while fetching business trip details for editing.');
+    });
+}
+
+function deleteDetails() {
+    const details = businessTripList.find(item => item.id === currentIndex);
+    if (confirm('Are you sure you want to delete this record?')) {
+        axios.delete(`http://127.0.0.1:8000/hr/api/delete-business-trip/${details.id}`, {
+            headers: {
+                Authorization: `Bearer ${getAuthToken()}`
+            }
+        })
+        .then(response => {
+            fetchBusinessTripHistory(getAuthToken());
+            closePopup();
+            alert('Record deleted successfully.');
+        })
+        .catch(error => {
+            console.error('Error deleting record:', error);
+            alert('An error occurred while deleting the record.');
+        });
+    }
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        displayBusinessTripHistory(businessTripList);
+    }
+}
+
+function nextPage() {
+    const totalPages = Math.ceil(businessTripList.length / rowsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        displayBusinessTripHistory(businessTripList);
+    }
+}
+
+function goToPage(page) {
+    currentPage = page;
+    displayBusinessTripHistory(businessTripList);
+}
+
+function navigateBack() {
+    window.history.back();
+}
+    </script>
+</body>
+</html>

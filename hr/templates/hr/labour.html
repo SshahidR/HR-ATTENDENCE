@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labour Contact Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0 20px;
+        }
+
+        .main-container{
+            display:flex;
+           justify-content: center;
+           align-items: center;
+           flex-direction:column;
+       }
+
+       h1 {
+           text-align: center;
+       }
+
+       .navbar {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           height: 40px;
+           background-color: #333;
+           color: white;
+           padding: 10px;
+       }
+       .heading{
+        font-size:15px;
+        text-align:start;
+      }
+      
+       .navbar-heading {
+        font-size:15px;
+        margin-left: 20px;
+    }
+       .nav-right, .nav-left {
+           position: relative;
+       }
+
+       .nav-left {
+           display: flex;
+           align-items: center;
+       }
+
+       .backbtn {
+           background-color: inherit;
+           color: white;
+           font-size: 16px;
+           border: none;
+           cursor: pointer;
+           padding: 10px;
+       }
+
+       .dropdown {
+           position: relative;
+           display: inline-block;
+       }
+
+       .dropbtn {
+           background-color: inherit;
+           color: white;
+           font-size: 16px;
+           border: none;
+           cursor: pointer;
+           padding: 10px;
+       }
+
+       .tooltip {
+           display: none;
+           position: absolute;
+           top: -5px;
+           right: 35px;
+           background-color: #555;
+           color: white;
+           text-align: center;
+           border-radius: 6px;
+           padding: 5px;
+           z-index: 1;
+           font-size: 12px;
+       }
+
+       .nav-right:hover .tooltip {
+           display: block;
+       }
+
+       .input-group {
+           position: relative;
+           margin-bottom: 1rem;
+           display: flex;
+           flex-direction: column;
+           width: 100%;
+       }
+
+       .input-field, .select-field {
+           width: 100%;
+           padding: 10px 10px 10px 40px;
+           border: 1px solid #ccc;
+           border-radius: 4px;
+           box-sizing: border-box;
+           color: black;
+       }
+
+       .input-field::placeholder {
+           color: black;
+       }
+
+       .icon {
+           position: absolute;
+           left: 10px;
+           top: 50%;
+           transform: translateY(-50%);
+           pointer-events: none;
+           margin-top: 12px;
+       }
+
+       .icon i {
+        color: black;
+        font-size: 14px;
+    }
+
+    .label {
+        margin-bottom: 5px;
+        font-weight: bold;
+        font-size:12px;
+
+    }
+
+       .save-button {
+           width: 20%;
+           padding: 10px;
+           border: none;
+           background-color: #333;
+           color: white;
+           font-size: 16px;
+           border-radius: 4px;
+           cursor: pointer;
+           margin-left: calc(50% - 55px);
+           margin-bottom: 20px;
+       }
+
+       #snackbar {
+           visibility: hidden; 
+           width: 350px; 
+           height:20px;
+           margin-left: -125px; 
+           background-color: green;
+           color: white; 
+           text-align: center; 
+           border-radius: 2px; 
+           padding: 16px; 
+           position: fixed; 
+           z-index: 1;
+           left: 50%; 
+           bottom: 30px; 
+         }
+         
+        #snackbar.show {
+           visibility: visible;
+           
+           -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+           animation: fadein 0.5s, fadeout 0.5s 2.5s;
+         }
+         
+          @-webkit-keyframes fadein {
+           from {bottom: 0; opacity: 0;}
+           to {bottom: 30px; opacity: 1;}
+         }
+         
+         @keyframes fadein {
+           from {bottom: 0; opacity: 0;}
+           to {bottom: 30px; opacity: 1;}
+         }
+         
+         @-webkit-keyframes fadeout {
+           from {bottom: 30px; opacity: 1;}
+           to {bottom: 0; opacity: 0;}
+         }
+         
+         @keyframes fadeout {
+           from {bottom: 30px; opacity: 1;}
+           to {bottom: 0; opacity: 0;}
+         }
+         .container{
+           height:100%;
+           width:50%;
+           background-color:white;
+           margin:20px;
+           padding:20px;
+         
+         }
+         .heading{
+           font-size:15px;
+           text-align:start;
+         }
+         #loading-overlay {
+           position: fixed;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           background-color: rgba(0, 0, 0, 0.5);
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           z-index: 9999;
+       }
+       
+       .spinner {
+           border: 4px solid #f3f3f3;
+           border-top: 4px solid #3498db;
+           border-radius: 50%;
+           width: 40px;
+           height: 40px;
+           animation: spin 1s linear infinite;
+       }
+       
+       @keyframes spin {
+           0% { transform: rotate(0deg); }
+           100% { transform: rotate(360deg); }
+       }
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+            <nav class="navbar">
+                <div class="nav-left">
+                    <button class="backbtn" onclick="navigateBack()"></button>
+                    <h2 class="navbar-heading">Labour Contact</h2>
+                </div>
+                <div class="nav-right">
+                    <div class="dropdown">
+                        <button class="dropbtn" onclick="navigateToHistory()">⋮</button>
+                        <span class="tooltip">History</span>
+                    </div>
+                </div>
+            </nav>
+
+            <h1 class="heading">Labour Contact Application</h1>
+            <form id="labour-contract-form">
+                <div class="input-group">
+                    <label class="label">Employee Name</label>
+                    <span class="icon"><i class="fa fa-user"></i></span>
+                    <input type="text" id="username" placeholder="Employee Name" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label class="label">Employee ID</label>
+                    <span class="icon"><i class="fa fa-id-badge"></i></span>
+                    <input type="text" id="emp_id" placeholder="Employee ID" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label class="label">Email</label>
+                    <span class="icon"><i class="fa fa-envelope"></i></span>
+                    <input type="text" id="email" placeholder="Email" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label class="label">Business Group</label>
+                    <span class="icon"><i class="fa fa-building"></i></span>
+                    <input type="text" id="group" placeholder="Business Group" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label class="label">Department</label>
+                    <span class="icon"><i class="fa fa-sitemap"></i></span>
+                    <input type="text" id="department" placeholder="Department" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label class="label">Reason For Amendment</label>
+                    <span class="icon"><i class="fa fa-landmark"></i></span>
+                    <select id="reason" class="select-field">
+                        <option value="" selected disabled hidden>Reason For Amendment</option>
+                        <option value="Name Change">Name Change</option>
+                        <option value="Position Change">Position Change</option>
+                        <option value="Position And Salary Change">Position And Salary Change</option>
+                        <option value="Salary Change">Salary Change</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label class="label">Expected Date of Amendment</label>
+                    <span class="icon"><i class="fa fa-calendar-alt"></i></span>
+                    <input type="date" id="amendment_date" class="input-field">
+                </div>  
+                <div class="input-group">
+                    <label class="label">Comment</label>
+                    <span class="icon"><i class="fa fa-comment"></i></span>
+                    <input type="text" id="comments" placeholder="Comment" class="input-field">
+                </div>
+                <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="your-csrf-token-here">
+                <button type="submit" class="save-button">Apply</button>
+
+                <p id="formMessage"></p>
+            </form>
+            <div id="snackbar">Application Sent Successfully</div>
+            <div id="loading-overlay" style="display:none;">
+                <div class="spinner"></div>
+            </div>    
+        </div>
+  </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        let authToken;
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            function getAuthToken() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'auth_token') {
+                        return decodeURIComponent(value);
+                    }
+                }
+                return null;
+            }
+
+            const authToken = getAuthToken();
+            const apiBaseUrl = 'http://127.0.0.1:8000/';
+            console.log("Authentication Token:", authToken);
+
+            // Configure toastr options
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+            };
+
+            async function sendAdminNotification(email) {
+                try {
+                    const csrftoken = document.getElementById('csrf_token').value;
+                    
+                    const response = await fetch(`http://127.0.0.1:8000/hr/api/send_admin_notification`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                            'Authorization': `Bearer ${authToken}`,
+                        },
+                        body: JSON.stringify({
+                            subject: 'Labour contract request',
+                            message: `Labour contract request by Employee with email ${email}.`,
+                            recipients: ['farhanabadubhai@gmail.com'],
+                        }),
+                    });
+                    
+                    if (response.ok) {
+                        console.log('Admin notification sent successfully');
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Failed to send admin notification:', errorText);
+                    }
+                } catch (error) {
+                    console.error('Error occurred while sending admin notification:', error.message);
+                }
+            }
+
+            async function fetchUserDetails() {
+                try {
+                    const response = await axios.get(`${apiBaseUrl}/hr/api/user_details`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (response.status === 200) {
+                        const data = response.data;
+                        document.getElementById('username').value = `${data.first_name} ${data.last_name}`;
+                        document.getElementById('emp_id').value = data.Emp_Id;
+                        document.getElementById('email').value = data.email;
+                        document.getElementById('group').value = data.group;
+                        document.getElementById('department').value = data.department;
+                    } else {
+                        console.error('Error fetching user details', response.data);
+                        toastr.error('Error fetching user details');
+                    }
+                } catch (error) {
+                    console.error('An error occurred while fetching user details:', error);
+                    toastr.error('Error fetching user details');
+                }
+            }
+        
+
+            fetchUserDetails();
+ 
+
+            const labourcontractform = document.getElementById('labour-contract-form');
+            labourcontractform.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const loadingOverlay = document.getElementById('loading-overlay');
+                loadingOverlay.style.display = 'flex';
+
+                const csrftoken = document.getElementById('csrf_token').value;
+
+                const data = {
+                    username: document.getElementById('username').value,
+                    emp_id: document.getElementById('emp_id').value,
+                    email: document.getElementById('email').value,
+                    department: document.getElementById('department').value,
+                    group: document.getElementById('group').value,
+                    reason: document.getElementById('reason').value,
+                    amendment_date: document.getElementById('amendment_date').value,
+                    comments: document.getElementById('comments').value,
+                };
+
+                Object.keys(data).forEach(key => data[key] === null && delete data[key]);
+
+                try {
+                    const response = await axios.post(`http://127.0.0.1:8000/hr/api/labour-contract`, data, {
+                        headers: {
+                            "X-CSRFTOKEN": csrftoken,
+                            'Authorization': `Bearer ${authToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                    });
+
+                    if (response.status === 200) {
+                        await sendAdminNotification(document.getElementById('email').value);
+                        clearNonFixedFields();
+                        console.log('Submitted Application:', response.data);
+                        showSnackbar('Labour contract submitted successfully');
+                    } else {
+                        showSnackbar('Labour contract submission failed');
+                    }
+                } catch (error) {
+                    console.error('Error submitting bank details:', error);
+                    if (error.response && error.response.data) {
+                        console.error('Error details:', error.response.data);
+                    } else {
+                        console.error('Error occurred:', error.message);
+                    }
+
+                    showSnackbar('An error occurred while submitting the application');
+                } finally {
+                    loadingOverlay.style.display = 'none';
+                }
+            });
+        });
+
+   
+  
+
+        function clearNonFixedFields() {
+            const fieldsToReset = [
+                'group', 'reason', 'amendment_date', 'comments'
+            ];
+            
+            fieldsToReset.forEach(fieldId => {
+                document.getElementById(fieldId).value = '';
+            });
+        }
+
+        function showSnackbar(message, duration = 3000) {
+            const snackbar = document.getElementById("snackbar");
+            snackbar.textContent  = message;
+            snackbar.classList.add("show");
+            setTimeout(function() {
+                snackbar.classList.remove("show");
+            }, duration);
+        }
+
+
+        function navigateBack() {
+            console.log('Navigate back');
+            window.location.href = 'labourContracthistory.html';
+        }
+
+        function navigateToHistory() {
+            window.location.href = "/hr/LabourContract/labourContracthistory";
+        }
+
+        
+    </script>
+</body>
+</html>
+
+
+

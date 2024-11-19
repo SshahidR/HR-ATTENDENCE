@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+   
+
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: white;
+      height: 50px;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .navbar-heading {
+      margin: 0;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .profile-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .profile-content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .section-container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .profile-pic-container {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .profile-pic {
+      position: relative;
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    .profile-pic img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+
+    .camera-icon {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background-color: #000;
+      color: white;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .profile-pic-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.edit-btn {
+  margin-left: auto;
+}
+
+    .username {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .designation {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .info-section {
+      margin-bottom: 20px;
+      font-size: 15px;
+      width: 100%;
+    }
+
+    .info-section h3 {
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: underline;
+      padding-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 16px;
+      color: black;
+    }
+
+    .info-item span:first-child {
+      width: 50%;
+    }
+
+    .info-item span:last-child {
+      width: 70%;
+    }
+
+    .info-item a {
+      text-decoration: none;
+      color: #000;
+    }
+
+    .info-item a:hover {
+      text-decoration: underline;
+    }
+
+    .edit-btn {
+      font-weight: bold;
+      color: black;
+      background-color: #fff;
+      border: 1px solid #000;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .edit-btn:hover {
+      background-color: #f0f0f0;
+      border-color: #333;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (min-width: 768px) {
+      .profile-content {
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main-container">
+    <nav class="navbar">
+      <h2 class="navbar-heading">Profile</h2>
+    </nav>
+    <div class="profile-container">
+      <div class="profile-content">
+        <div class="section-container profile-header">
+          <div class="profile-pic-container">
+            <div class="profile-pic">
+              <img id="profileImage" src="https://via.placeholder.com/100" alt="Profile Picture" />
+              <div class="camera-icon">
+                <i class="fas fa-camera"></i>
+              </div>
+            </div>
+            <div class="profile-pic-info">
+              <span class="username" id="username"></span>
+              <span class="designation" id="designation"></span>
+            
+            </div>
+          </div>
+        </div>
+
+        <div class="section-container">
+          <div class="info-section">
+            <h3>Profile Info</h3>
+            <div class="info-item">
+              <span><i class="fas fa-user"></i> First Name</span>
+              <span id="firstName"></span>
+            </div>
+            <div class="info-item">
+              <span><i class="fas fa-user"></i> Last Name</span>
+              <span id="lastName"></span>
+            </div>
+            <div class="info-item">
+              <span><i class="fas fa-id-badge"></i> Employee ID</span>
+              <span id="empId"></span>
+            </div>
+            <div class="info-item">
+              <span><i class="fas fa-building"></i> Department</span>
+              <span id="department"></span>
+            </div>
+            <div class="info-item">
+              <span><i class="fas fa-envelope"></i> Email</span>
+              <span id="email"></span>
+            </div>
+            <div class="info-item">
+              <span><i class="fas fa-calendar-alt"></i> Date of Join</span>
+              <span id="dateJoined"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-container">
+          <div class="info-section">
+            <h3>Personal Information
+              <a href="{% url 'hr:editProfile' %}">
+                <i class="fas fa-edit" style="margin-right: 5px;"></i>
+                <button class="edit-btn"
+                  style="background-color: transparent; border: none; padding: 0; font-weight: bold; color: black;">Edit</button>
+              </a>
+            </h3>
+            <div class="info-item">
+              <span><i class="fas fa-phone"></i> Phone Number</span>
+              <span id="phoneNumber"></span>
+            </div>
+            <div class="info-item">
+              <span><i class="fab fa-whatsapp"></i> WhatsApp Number</span>
+              <span id="whatsAppNumber"></span>
+            </div>
+            <div class="info-item">
+              <span><i class="fas fa-birthday-cake"></i> Date of Birth</span>
+              <span id="dateOfBirth"></span>
+            </div>
+            <div class="info-item">
+              <span><i class="fas fa-map-marker-alt"></i> Address</span>
+              <span id="address"></span>
+            </div>
+            <div class="info-item">
+              <span><i class="fas fa-globe"></i> Country</span>
+              <span id="country"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-container">
+          <div class="info-section">
+            <h3>Settings</h3>
+            <div class="info-item">
+              <span style="width: 50%"><i class="fas fa-lock"></i> Password</span>
+              <a href="{% url 'hr:changePassword' %}" class="change-password" style="width: 70%">Change Password</a>
+            </div>
+            <div class="info-item">
+              <span style="width: 50%"><i class="fas fa-sign-out-alt"></i> Logout</span>
+              <a href="#" class="LogOut" style="width: 70%">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="cameraInterface"
+      style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+      <video id="video" width="400" height="300" autoplay></video>
+      <canvas id="canvas" width="400" height="300" style="display: none;"></canvas>
+      <br>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 2rem;">
+        <button id="captureButton" class="Capture">Capture</button>
+        <button id="closeCamera">Close</button>
+      </div>
+    </div>
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function getAuthToken() {
+          const cookies = document.cookie.split(';');
+          for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'auth_token') {
+              return decodeURIComponent(value);
+            }
+          }
+          return null;
+        }
+
+        async function fetchUserDetails() {
+          try {
+            const token = getAuthToken();
+            if (!token) {
+              console.error('No authentication token found');
+              return;
+            }
+
+            console.log('Fetching user details');
+            const response = await axios.get('http://127.0.0.1:8000/hr/api/user_details', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const userData = response.data;
+            console.log('User Data:', userData);
+
+            // Update the profile page with user details
+            document.getElementById("firstName").textContent = userData.first_name;
+            document.getElementById("lastName").textContent = userData.last_name;
+            document.getElementById("empId").textContent = userData.emp_id;
+            document.getElementById("department").textContent = userData.department;
+            document.getElementById("email").textContent = userData.email;
+            document.getElementById("dateJoined").textContent = userData.date_joined;
+            document.getElementById("phoneNumber").textContent = userData.phone_number;
+            document.getElementById("whatsAppNumber").textContent = userData.whats_up_number;
+            document.getElementById("dateOfBirth").textContent = userData.date_of_birth;
+            document.getElementById("address").textContent = userData.address;
+            document.getElementById("country").textContent = userData.country;
+            document.getElementById("username").textContent = userData.username;
+            document.getElementById("designation").textContent = userData.designation;
+
+            if (userData.user_image) {
+              document.getElementById("profileImage").src = `data:image/jpeg;base64,${userData.user_image}`;
+            }
+          } catch (error) {
+            console.error('Error fetching user details:', error);
+          }
+        }
+
+        async function uploadProfileImage(imageDataUrl) {
+          try {
+            const token = getAuthToken();
+            if (!token) {
+              showSnackbar('No authentication token found', 'error');
+              return;
+            }
+
+            // Remove the "data:image/jpeg;base64," part from the data URL
+            const base64Image = imageDataUrl.split(',')[1];
+
+            const response = await axios.put('http://127.0.0.1:8000/hr/api/user_details/edit_image',
+              { image_data: base64Image },
+              {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+                }
+              }
+            );
+
+            console.log('Image upload response:', response.data);
+            showSnackbar('Profile image updated successfully', 'success');
+
+            // Refresh the user details to show the updated image
+            fetchUserDetails();
+          } catch (error) {
+            console.error('Error uploading profile image:', error);
+            showSnackbar(error.response?.data?.error || 'Error updating profile image', 'error');
+            // Revert to the original image if update fails
+            fetchUserDetails();
+          }
+        }
+
+        function showSnackbar(message, type) {
+          const snackbar = document.createElement('div');
+          snackbar.textContent = message;
+          snackbar.style.position = 'fixed';
+          snackbar.style.bottom = '20px';
+          snackbar.style.left = '50%';
+          snackbar.style.transform = 'translateX(-50%)';
+          snackbar.style.padding = '10px 20px';
+          snackbar.style.borderRadius = '5px';
+          snackbar.style.color = 'white';
+          snackbar.style.zIndex = '1000';
+
+          if (type === 'success') {
+            snackbar.style.backgroundColor = '#4CAF50';
+          } else if (type === 'error') {
+            snackbar.style.backgroundColor = '#F44336';
+          }
+
+          document.body.appendChild(snackbar);
+
+          setTimeout(() => {
+            snackbar.remove();
+          }, 3000);
+        }
+
+
+        fetchUserDetails();
+
+        // Camera functionality
+        const cameraIcon = document.querySelector('.camera-icon');
+        const cameraInterface = document.getElementById('cameraInterface');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('captureButton');
+        const closeButton = document.getElementById('closeCamera');
+        const profileImage = document.getElementById('profileImage');
+
+        cameraIcon.addEventListener('click', openCamera);
+        captureButton.addEventListener('click', captureImage);
+        closeButton.addEventListener('click', closeCamera);
+
+        function openCamera() {
+          cameraInterface.style.display = 'block';
+          navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+              video.srcObject = stream;
+            })
+            .catch(err => {
+              console.error("Error accessing the camera", err);
+            });
+        }
+
+        function captureImage() {
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+          let imageDataUrl = canvas.toDataURL('image/jpeg');
+
+          // Update the image immediately
+          profileImage.src = imageDataUrl;
+
+          closeCamera();
+          uploadProfileImage(imageDataUrl);
+        }
+
+        function closeCamera() {
+          cameraInterface.style.display = 'none';
+          const stream = video.srcObject;
+          const tracks = stream.getTracks();
+          tracks.forEach(track => track.stop());
+        }
+      });
+    </script>
+</body>
+
+</html>

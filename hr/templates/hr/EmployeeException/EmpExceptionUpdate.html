@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Reimbursement</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 25px;
+            text-align: start;
+            margin-left: 10px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            background-color: #333;
+            color: white;
+        }
+
+        .navbar-heading {
+            font-size: 20px;
+            margin-left: 20px;
+            padding-top: 10px;
+        }
+
+        .nav-right,
+        .nav-left {
+            position: relative;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .form-select {
+            font-size: 13px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .heading1 {
+            text-align: start;
+            font-size: 15px;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            top: -5px;
+            right: 35px;
+            background-color: #555;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            z-index: 1;
+            font-size: 12px;
+        }
+
+        .nav-right:hover .tooltip {
+            display: block;
+        }
+
+        .input-field,
+        .select-field {
+            width: 100%;
+            padding: 10px 10px 10px 40px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            color: black;
+        }
+
+        .select-field {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>') no-repeat right 10px center;
+            background-size: 12px;
+        }
+
+        .input-field::placeholder {
+            color: black;
+        }
+
+        .icon {
+            position: absolute;
+            left: 10px;
+            top: 38px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 0.2rem;
+            margin-top: 0;
+        }
+
+        .input-field.error,
+        .select-field.error {
+            border-color: red;
+        }
+
+        .icon i {
+            color: black;
+            font-size: 14px;
+        }
+
+        .label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .save-button {
+            width: 20%;
+            padding: 10px;
+            border: none;
+            background-color: #0f0f0f;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: calc(50% - 55px);
+            margin-bottom: 20px;
+        }
+
+        #snackbar {
+            visibility: hidden;
+            width: 350px;
+            height: 50px;
+            margin-left: -125px;
+            background-color: green;
+            color: white;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+        }
+
+        #snackbar.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        #snackbar.error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        @-webkit-keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        .container {
+            height: 100%;
+            width: 50%;
+            background-color: white;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        .heading {
+            font-size: 15px;
+            text-align: start;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 0.1rem;
+        }
+
+        .col-12 {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            font-size: 13px;
+            padding: 8px 8px 8px 10px;
+        }
+
+        .mb-4 {
+            margin-bottom: 0.6rem !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 0.6rem !important;
+        }
+
+        .col-md-6 {
+            padding-bottom: 0.5rem;
+        }
+
+        .save-button {
+            margin-top: 0.5rem;
+        }
+
+        .space {
+            margin-top: -0.5rem;
+        }
+
+        @media (max-width: 767px) {
+            .col-md-6:nth-child(2) {
+                margin-top: -0.5rem;
+            }
+
+            .mb-3 {
+                margin-bottom: 0.5rem !important;
+            }
+
+            .col-md-6 {
+                padding-bottom: 0.5rem;
+            }
+
+            .save-button {
+                margin-top: 0.5rem;
+            }
+
+            .space {
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <nav class="navbar">
+            <div class="nav-left">
+                <button class="backbtn" onclick="navigateBack()"><i class="fas fa-arrow-left"></i></button>
+                <h2 class="navbar-heading">Edit Exception Details</h2>
+            </div>
+        </nav>
+
+
+        <form id="exception-form" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+            <div class="col">
+                <div class="mb-3">
+                    <label for="employee_name" class="form-label">Employee Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <input type="text" id="employee_name" class="form-control" placeholder="Employee Name" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="mb-3">
+                    <label for="employee_id" class="form-label">Employee ID</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                        <input type="text" id="employee_id" class="form-control" placeholder="Employee ID" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                        <input type="text" id="email" class="form-control" placeholder="Email" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="business_group" class="form-label">Business Group</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        <input type="text" id="business_group" class="form-control" placeholder="Business Group">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="department" class="form-label">Department</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        <input type="text" id="department" class="form-control" placeholder="Department" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="date_of_exception" class="form-label">Date Of Exception</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        <input type="date" id="date_of_exception" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col">
+                <div class="mb-3">
+                    <label for="hours_late_in" class="form-label">Hour Late In</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-clock"></i></span>
+                        <input type="number" id="hours_late_in" class="form-control" placeholder="Hour Late In">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="minutes_late_in" class="form-label">Minutes Late In</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-clock"></i></span>
+                        <input type="number" id="minutes_late_in" class="form-control" placeholder="Minutes Late In">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="hours_early_out" class="form-label">Hour Early Out</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-clock"></i></span>
+                        <input type="number" id="hours_early_out" class="form-control" placeholder="Hours Early Out">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="minutes_early_out" class="form-label">Minutes Early Out</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-clock"></i></span>
+                        <input type="number" id="minutes_early_out" class="form-control"
+                            placeholder="Minutes Early Out">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="reason" class="form-label">Reason</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-comment"></i></span>
+                        <input type="text" id="reason" class="form-control" placeholder="Reason">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="reason_category" class="form-label">Reason Category</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-list"></i></span>
+                        <select class="form-select" id="reason_category">
+                            <option value="" selected disabled hidden>Select Reason</option>
+                            <option value="Arrived late night from vacation">Arrived late night from vacation</option>
+                            <option value="Bank work">Bank work</option>
+                            <option value="COMP OFF">COMP OFF</option>
+                            <option value="Doctor Appointment">Doctor Appointment</option>
+                            <option value="Due to Doctor Visit Self">Due to Doctor Visit Self</option>
+                            <option value="Due to Doctor Visit with Family">Due to Doctor Visit with Family</option>
+                            <option value="Due to annual leave">Due to annual leave</option>
+                            <option value="Due to delay Metro">Due to delay Metro</option>
+                            <option value="Due to headache">Due to headache</option>
+                            <option value="Due to personal work">Due to personal work</option>
+                            <option value="Forget to Punch in">Forget to Punch in</option>
+                            <option value="Forgot to Punch out">Forgot to Punch out</option>
+                            <option value="Missed Punch In'">Missed Punch In'</option>
+                            <option value="Missed Punch Out">Missed Punch Out</option>
+                            <option value="Not well so late to office">Not well so late to office</option>
+                            <option value="On Customer Site">On Customer Site</option>
+                            <option value="On Siite">On Siite</option>
+                            <option value="Others">Others</option>
+                            <option value="Traffic">Traffic</option>
+                            <option value="Went to kid school">Went to kid school</option>
+                            <option value="Worked extra hours">Worked extra hours</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="save-button" onclick="saveDetails()">Update</button>
+    </div>
+    </form>
+    <div id="snackbar"></div>
+    <div id="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        let exceptionId;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+
+            // Check if id is present
+            exceptionId = params.get('id');
+
+            console.log('Full URL:', window.location.href);
+            console.log('Query parameters:', window.location.search);
+            console.log('Extracted Employee Exception ID:', exceptionId);
+
+            if (exceptionId) {
+                // If id is present, fetch details using the API
+                fetchExceptionDetails(exceptionId);
+            } else {
+                // If id is not present, populate fields from URL parameters
+                populateFieldsFromUrl(params);
+            }
+        });
+
+        function getAuthToken() {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'auth_token') {
+                    return decodeURIComponent(value);
+                }
+            }
+            return null;
+        }
+
+        function fetchExceptionDetails(exceptionId) {
+            axios.get(`http://127.0.0.1:8000/hr/api/data-attendace-exception/${exceptionId}`, {
+                headers: {
+                    Authorization: `Bearer ${getAuthToken()}`
+                }
+            })
+                .then(response => {
+                    const exceptionDetails = response.data;
+                    document.getElementById('employee_name').value = exceptionDetails.username;
+                    document.getElementById('employee_id').value = exceptionDetails.emp_id;
+                    document.getElementById('email').value = exceptionDetails.email;
+                    document.getElementById('business_group').value = exceptionDetails.group;
+                    document.getElementById('department').value = exceptionDetails.department;
+                    document.getElementById('date_of_exception').value = exceptionDetails.date_of_exception;
+                    document.getElementById('hours_late_in').value = exceptionDetails.hours_late_in;
+                    document.getElementById('minutes_late_in').value = exceptionDetails.minutes_late_in;
+                    document.getElementById('hours_early_out').value = exceptionDetails.hours_early_out;
+                    document.getElementById('minutes_early_out').value = exceptionDetails.minutes_early_out;
+                    document.getElementById('reason_category').value = exceptionDetails.reason_category;
+                    document.getElementById('reason').value = exceptionDetails.attendanceException_reason;
+                })
+                .catch(error => {
+                    console.error('Error fetching Employee Exception details for editing:', error);
+                    let errorMessage = 'An error occurred while fetching Employee Exception details.';
+                    if (error.response) {
+                        errorMessage += ` Status: ${error.response.status}`;
+                    }
+                    showSnackbar(errorMessage, 5000);
+                });
+        }
+
+        function populateFieldsFromUrl(params) {
+            document.getElementById('employee_name').value = params.get('username') || '';
+            document.getElementById('employee_id').value = params.get('emp_id') || '';
+            document.getElementById('email').value = params.get('email') || '';
+            document.getElementById('business_group').value = params.get('group') || '';
+            document.getElementById('department').value = params.get('department') || '';
+            document.getElementById('date_of_exception').value = params.get('date_of_exception') || '';
+            document.getElementById('hours_late_in').value = params.get('hours_late_in') || '';
+            document.getElementById('minutes_late_in').value = params.get('minutes_late_in') || '';
+            document.getElementById('hours_early_out').value = params.get('hours_early_out') || '';
+            document.getElementById('minutes_early_out').value = params.get('minutes_early_out') || '';
+            document.getElementById('reason_category').value = params.get('reason_category') || '';
+            document.getElementById('reason').value = params.get('attendanceException_reason') || '';
+
+            console.log('Fields populated from URL parameters');
+        }
+
+        function saveDetails() {
+            let url;
+            const data = {
+                username: document.getElementById('employee_name').value,
+                emp_id: document.getElementById('employee_id').value,
+                email: document.getElementById('email').value,
+                department: document.getElementById('department').value,
+                group: document.getElementById('business_group').value,
+                attendanceException_reason: document.getElementById('reason').value,
+                date_of_exception: document.getElementById('date_of_exception').value,
+                hours_late_in: document.getElementById('hours_late_in').value || null,
+                minutes_late_in: document.getElementById('minutes_late_in').value || null,
+                hours_early_out: document.getElementById('hours_early_out').value || null,
+                minutes_early_out: document.getElementById('minutes_early_out').value || null,
+                reason_category: document.getElementById('reason_category').value || null,
+            };
+
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            if (exceptionId) {
+                // If we have an exceptionId, use PUT to update
+                url = `http://127.0.0.1:8000/hr/api/put-attendace-exception-data/${exceptionId}`;
+                axios.put(url, data, {
+                    headers: { Authorization: `Bearer ${getAuthToken()}` }
+                })
+                    .then(handleSaveSuccess)
+                    .catch(handleSaveError);
+            } else {
+                // If we don't have an exceptionId, use POST to create
+                url = 'http://127.0.0.1:8000/hr/api/post-attendace-exception-data';
+                axios.post(url, data, {
+                    headers: { Authorization: `Bearer ${getAuthToken()}` }
+                })
+                    .then(handleSaveSuccess)
+                    .catch(handleSaveError);
+            }
+        }
+
+        function handleSaveSuccess(response) {
+            document.getElementById('loading-overlay').style.display = 'none';
+            showSnackbar('Exception  updated successfully');
+            setTimeout(() => {
+                window.location.href = '/hr/EmployeeException/EmpExceptionHistory';
+            }, 2000);
+        }
+
+        function handleSaveError(error) {
+            document.getElementById('loading-overlay').style.display = 'none';
+            console.error('Error updating Employee Exception details:', error);
+            let errorMessage = 'An error occurred while updating Employee Exception details.';
+            if (error.response) {
+                errorMessage += ` Status: ${error.response.status}`;
+            }
+            showSnackbar(errorMessage, 5000);
+        }
+
+        function showError(field, message) {
+            field.classList.add('error');
+            let errorElement = field.closest('.mb-3').querySelector('.error-message');
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+            }
+        }
+
+        function removeError(field) {
+            field.classList.remove('error');
+            const errorElement = field.closest('.mb-3').querySelector('.error-message');
+            if (errorElement) {
+                errorElement.textContent = '';
+                errorElement.classList.remove('show');
+            }
+        }
+
+        function showSnackbar(message, duration = 3000) {
+            const snackbar = document.getElementById("snackbar");
+            snackbar.textContent = message;
+            snackbar.classList.add("show");
+            setTimeout(function () {
+                snackbar.classList.remove("show");
+            }, duration);
+        }
+
+        function navigateBack() {
+            window.history.back();
+        }
+
+        function navigateToHistory() {
+            window.location.href = '/hr/EmployeeException/EmpExceptionHistory';
+        }
+    </script>
+</body>
+
+</html>

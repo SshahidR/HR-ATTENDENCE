@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Bank Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+         h1{
+            font-size:25px;
+            text-align:start;
+            margin-left: 10px;
+            font-weight: bold;
+            margin-top: 8px;
+          }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            background-color: #333;
+            color: white;
+        }
+        .navbar-heading {
+            font-size:15px;
+            margin-left: 20px;
+        }
+        .nav-right, .nav-left {
+            position: relative;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+        .heading1{
+            text-align: start;
+            font-size: 15px;
+        }
+        .tooltip {
+            display: none;
+            position: absolute;
+            top: -5px;
+            right: 35px;
+            background-color: #555;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            z-index: 1;
+            font-size: 12px;
+        }
+        .nav-right:hover .tooltip {
+            display: block;
+        }
+        .input-field, .select-field {
+           width: 100%;
+           padding: 10px 10px 10px 40px;
+           border: 1px solid #ccc;
+           border-radius: 4px;
+           box-sizing: border-box;
+           color: black;
+       }
+       .select-field {
+           appearance: none;
+           -webkit-appearance: none;
+           -moz-appearance: none;
+           background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>') no-repeat right 10px center;
+           background-size: 12px;
+       }
+       .input-field::placeholder {
+           color: black;
+       }
+       .icon {
+            position: absolute;
+            left: 10px;
+            top: 38px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 0.2rem;
+            margin-top: 0;
+            
+
+        }
+        .input-field.error, .select-field.error {
+           border-color: red;
+       }
+        .icon i {
+            color: black;
+            font-size: 14px;
+        }
+        .label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size:12px;
+        }
+        .save-button {
+            width: 20%;
+            padding: 10px;
+            border: none;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            
+            margin-bottom: 20px;
+        }
+        #snackbar {
+            visibility: hidden;
+            width: 350px;
+            height:50px;
+            margin-left: -125px;
+            background-color: green;
+            color: white;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+        }
+        #snackbar.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        #snackbar.error {
+            background-color: #f44336;
+            color: white;
+        }
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+        .container{
+            height:100%;
+            width:50%;
+            background-color:white;
+            margin:20px;
+            padding:20px;
+        }
+        .heading{
+            font-size:15px;
+            text-align:start;
+        }
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .form-label{
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 0.1rem;
+       }
+       .col-12 {
+    margin-bottom: 0.5rem;
+}
+       .form-control{
+        font-size: 13px;
+        padding: 8px 8px 8px 10px;
+       }
+       .form-select{
+        font-size: 13px;
+       }
+       .mb-4 {
+    margin-bottom: 0.5rem !important;
+}
+       .mb-3 {
+            margin-bottom: 0.2rem !important;
+        }
+
+        .col-md-6 {
+        padding-bottom: 0.5rem;
+        }
+
+        .save-button {
+        margin-top: 0.5rem;
+        }
+        .space{
+          
+            margin-top: -0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar">
+            <div class="nav-left">
+                <button class="backbtn" onclick="navigateBack()"><i class="fas fa-arrow-left"></i></button>
+                <h2 class="navbar-heading">Edit Employee Travel</h2>
+            </div>
+        </nav>
+
+     <h1 class="mt-4">Employee Travel Application</h1>
+        <form id="employee-travel-form" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+            <div class="col">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Employee Name</label>
+                    <div class="input-group"> 
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <input type="text" id="username" class="form-control"placeholder="Employee Name" class="input-field" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="emp_id" class="form-label">Employee ID</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                        <input type="text" id="emp_id" class="form-control" placeholder="Employee ID" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                        <input type="text" id="email" class="form-control" placeholder="Email" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="group" class="form-label">Business Group</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-building"></i></span>
+                        <input type="text" id="group" class="form-control" placeholder="Business Group">
+                     </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                      <label for="department" class="form-label">Department</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        <input type="text" id="department" class="form-control"placeholder="Department" readonly>
+                    </div>
+                </div>
+            </div>
+        <div class="col">
+            <div class="mb-3">
+                    <label for="request_type" class="form-label">Request Type</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-file-alt"></i></span>
+                    <input type="text" id="request_type" class="form-control" placeholder="Request Type" >
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="purpose_of_visit" class="form-label">Purpose of Visit</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-plane"></i></span>
+                    <select  class="form-select" id="purpose_of_visit">
+                        <option value="" selected disabled hidden >Select Purpose of Visit</option>
+                        <option value="business_trip">Business Trip</option>
+                        <option value="work_assignment">Work Assignment</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="travel_start_date" class="form-label">Travel Start Date</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    <input type="date" id="travel_start_date" class="form-control" placeholder="travel_start_date">
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for= "travel_end_date"class="form-label">Travel End Date</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    <input type="date" id="travel_end_date" class="form-control" placeholder="travel_end_date">
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="country_of_travel"class="form-label">Country of Travel</label>
+                <div class="input-group">                 
+                    <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                    <select class="form-select" id="country_of_travel">
+                        <option value="" selected disabled hidden>Select Country</option>
+                        <option value="Afghanistan">Afghanistan</option>
+                        <option value="Algeria">Algeria</option>
+                        <option value="Bahrain">Bahrain</option>
+                        <option value="Bangladesh">Bangladesh</option>
+                        <option value="Bhutan">Bhutan</option>
+                        <option value="Burma Union Myanmar">Burma Union Myanmar</option>
+                        <option value="China">China</option>
+                        <option value="Djibouti">Djibouti</option>
+                        <option value="Egypt">Egypt</option>
+                        <option value="Hong Kong">Hong Kong</option>
+                        <option value="India">India</option>
+                        <option value="Indonesia">Indonesia</option>
+                        <option value="Iran">Iran</option>
+                        <option value="Iraq">Iraq</option>
+                        <option value="Japan">Japan</option>
+                        <option value="Jordan">Jordan</option>
+                        <option value="Kampuchea">Kampuchea</option>
+                        <option value="Kuwait">Kuwait</option>
+                        <option value="Lebanon">Lebanon</option>
+                        <option value="Libya">Libya</option>
+                        <option value="Malaysia">Malaysia</option>
+                        <option value="Mauritania">Mauritania</option>
+                        <option value="Morocco">Morocco</option>
+                        <option value="Nepal">Nepal</option>
+                        <option value="North Korea">North Korea</option>
+                        <option value="Pakistan">Pakistan</option>
+                        <option value="Palestine">Palestine</option>
+                        <option value="Philippines">Philippines</option>
+                        <option value="Qatar">Qatar</option>
+                        <option value="Saudi Arabia">Saudi Arabia</option>
+                        <option value="Singapore">Singapore</option>
+                        <option value="Somalia">Somalia</option>
+                        <option value="South Korea">South Korea</option>
+                        <option value="Sri Lanka">Sri Lanka</option>
+                        <option value="Sudan">Sudan</option>
+                        <option value="Sultanate Of Oman">Sultanate Of Oman</option>
+                        <option value="Syria">Syria</option>
+                        <option value="Taiwan">Taiwan</option>
+                        <option value="Thailand">Thailand</option>
+                        <option value="Tunisia">Tunisia</option>
+                        <option value="United Arab Emirates">United Arab Emirates</option>
+                        <option value="Vietnam">Vietnam</option>
+                        <option value="Yemen">Yemen</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="entity_company_traveling_for" class="form-label">Entity/Company Traveling For</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-building"></i></span>
+                    <input type="text" id="entity_company_traveling_for" class="form-control" placeholder="Entity/Company Traveling For">
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3 mt-3" >
+                <label for="advance_amount_required"class="form-label">Advance Amount Required</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-money-bill"></i></span>
+                    <input type="text" id="advance_amount_required" class="form-control"placeholder="Advance Amount Required">
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label id="currency"class="form-label">Currency</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-money-bill-wave"></i></span>
+                    <select class="form-select" id="currency">
+                       
+                        <option value="AED">AED</option>
+                        <option value="BHD">BHD</option>
+                        <option value="CNY">CNY</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="visa_to_be_processed"class="form-label">Visa to be Processed</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-passport"></i></span>
+                    <select class="form-select"id="visa_to_be_processed" >
+                        <option value="" selected disabled hidden>Select Type</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3 mt-3">
+                <label for="book_hotel_accommodation"class="form-label">Book Hotel Accommodation</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-hotel"></i></span>
+                    <select class="form-select" id="book_hotel_accommodation">
+                        <option value="" selected disabled hidden>Select Type</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3 mt-3">
+                <label for="flight_ticket_required"class="form-label">Flight Ticket Required</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-plane-departure"></i></span>
+                    <select class="form-select" id="flight_ticket_required">
+                        <option value="" selected disabled hidden>Select Type</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="visa_letter_required"class="form-label">Visa Letter Required</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-file-alt"></i></span>
+                    <select class="form-select" id="visa_letter_required">
+                        <option value="" selected disabled hidden>Select Type</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="employeetravel_comments" class="form-label">Comments</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-comments"></i></span>
+                    <input type="text" id="employeetravel_comments" class="form-control" placeholder="Comments" >
+                </div>
+            </div>
+        </div>
+        </div>
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <button type="button" class="save-button" onclick="saveDetails(event)">Update</button>
+        </div>
+    </div>
+    <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="your-csrf-token-here">
+            </form>
+            <div id="snackbar">Details saved successfully!</div>
+            <div id="loading-overlay" style="display:none;">
+                <div class="spinner"></div>
+            </div>  
+        </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const leaveId = params.get('id');
+            console.log('ID:', leaveId);
+            if (leaveId) {
+                fetchLeaveDetails(leaveId);
+            } else {
+                console.error('BusinessTrip ID not found in query parameters.');
+                showSnackbar('ID not found', 'error');
+            }
+            document.getElementById('employee-travel-form').addEventListener('submit', (event) => {
+                event.preventDefault();
+                saveDetails();
+            });
+        });
+        
+        function getAuthToken() {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'auth_token') {
+                    return decodeURIComponent(value);
+                }
+            }
+            return null;
+        }
+        
+        function fetchLeaveDetails(leaveId) {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.style.display = 'flex';
+        
+            axios.get(`http://127.0.0.1:8000/hr/api/travel-get/${leaveId}`, {
+                headers: {
+                    Authorization: `Bearer ${getAuthToken()}`
+                }
+            })
+            .then(response => {
+                const leaveDetails = response.data;
+                // Prefill the input fields with fetched data
+                document.getElementById('username').value = leaveDetails.username;
+                document.getElementById('emp_id').value = leaveDetails.emp_id;
+                document.getElementById('email').value = leaveDetails.email;
+                document.getElementById('department').value = leaveDetails.department;
+                document.getElementById('group').value = leaveDetails.group;
+                document.getElementById('request_type').value = leaveDetails.request_type;
+                document.getElementById('purpose_of_visit').value = leaveDetails.purpose_of_visit;
+                document.getElementById('travel_start_date').value = leaveDetails.travel_start_date;
+                document.getElementById('travel_end_date').value = leaveDetails.travel_end_date;
+                document.getElementById('country_of_travel').value = leaveDetails.country_of_travel;
+                document.getElementById('entity_company_traveling_for').value = leaveDetails.entity_company_traveling_for;
+                document.getElementById('advance_amount_required').value = leaveDetails.advance_amount_required;
+                document.getElementById('currency').value = leaveDetails.currency;
+                document.getElementById('visa_to_be_processed').value = leaveDetails.visa_to_be_processed;
+                document.getElementById('book_hotel_accommodation').value = leaveDetails.book_hotel_accommodation;
+                document.getElementById('flight_ticket_required').value = leaveDetails.flight_ticket_required;
+                document.getElementById('visa_letter_required').value = leaveDetails.visa_letter_required;
+                document.getElementById('employeetravel_comments').value = leaveDetails.employeetravel_comments;
+            })
+            .catch(error => {
+                console.error('Error fetching BusinessTrip details for editing:', error);
+                showSnackbar('An error occurred while fetching BusinessTrip details for editing.', 'error');
+            })
+            .finally(() => {
+                loadingOverlay.style.display = 'none';
+            });
+        }
+        
+        function saveDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const leaveId = params.get('id'); 
+            const loadingOverlay = document.getElementById('loading-overlay');
+        
+            // Prepare data from input fields
+            const data = {
+                username: document.getElementById('username').value,
+                emp_id: document.getElementById('emp_id').value,
+                email: document.getElementById('email').value,
+                department: document.getElementById('department').value,
+                group: document.getElementById('group').value,
+                request_type: document.getElementById('request_type').value,
+                purpose_of_visit: document.getElementById('purpose_of_visit').value,
+                travel_start_date: document.getElementById('travel_start_date').value,
+                travel_end_date: document.getElementById('travel_end_date').value,
+                country_of_travel: document.getElementById('country_of_travel').value,
+                entity_company_traveling_for: document.getElementById('entity_company_traveling_for').value,
+                advance_amount_required: document.getElementById('advance_amount_required').value,
+                currency: document.getElementById('currency').value,
+                visa_to_be_processed: document.getElementById('visa_to_be_processed').value,
+                book_hotel_accommodation: document.getElementById('book_hotel_accommodation').value,
+                flight_ticket_required: document.getElementById('flight_ticket_required').value,
+                visa_letter_required: document.getElementById('visa_letter_required').value,
+                employeetravel_comments: document.getElementById('employeetravel_comments').value,
+            };
+        
+            loadingOverlay.style.display = 'flex';
+        
+            axios.put(`http://127.0.0.1:8000/hr/api/update-employee-travel/${leaveId}`, data, {
+                headers: {
+                    Authorization: `Bearer ${getAuthToken()}`
+                }
+            })
+            .then(response => {
+                showSnackbar('BusinessTrip details updated successfully.');
+                setTimeout(() => {
+                    window.location.href = '/hr/EmployeeTravel/EmployeeTravelHistory';
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error updating BusinessTrip details:', error.response.data);
+                showSnackbar('An error occurred while updating BusinessTrip details.', 'error');
+            })
+            .finally(() => {
+                loadingOverlay.style.display = 'none';
+            });
+        }
+        
+        function navigateBack() {
+            window.history.back();
+        }
+        
+        function showSnackbar(message, type = 'success') {
+            const snackbar = document.getElementById('snackbar');
+            snackbar.textContent = message;
+            snackbar.className = 'show ' + type;
+            setTimeout(() => { snackbar.className = snackbar.className.replace('show', ''); }, 3000);
+        }
+    </script>
+    
+ 
+    
+       
+</body>
+</html>

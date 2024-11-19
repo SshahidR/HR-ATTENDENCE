@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Id</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        h1 {
+            text-align: start;
+            font-size: 15px;
+        }
+        .main-container{
+            width: 30%;
+            margin: 20px;
+            padding: 20px;
+            height: 100%;
+            background-color: #ffff;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 40px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+
+        .navbar-heading {
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .nav-right, .nav-left {
+            position: relative;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+        .card-container{
+            width: 300px;
+            height: 600px;
+            /* background-color: blanchedalmond; */
+            background-image: url("/static/images/vnimc_1.png");
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 0 auto;
+            background-position: center;
+            background-size: cover;
+
+
+        }
+        .profile-pic-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-direction: column;
+            margin-top: 100px;
+        }
+        .profile-pic {
+            position: relative;
+            display: inline-block;
+        }
+        .profile-pic img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            
+        }
+        .main-details{
+            text-align: center;
+            line-height: 8px;
+           
+        }
+        .main-details h1{
+            text-align: center;
+            padding-top: 25px;
+            font-size:30px;
+            letter-spaceing:5px;
+        }
+        .main-details h3{
+            font-size: 13px;
+            
+            padding: 12px 10px 12px 10px;
+            border-radius: 4px;
+            color: #000;
+            
+
+            
+            
+        }
+        .Emp-details{
+            display: flex;
+            align-items: start;
+            flex-direction: column;
+            padding-left: 10px;
+            padding-top: 20px;
+            
+
+        }
+        .Emp-details .Span {
+            padding-left: 5.3px;
+            line-height:30px;
+        }
+        .heading1{
+            font-size: 15px;
+            text-align: start;
+            padding-left:10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <nav class="navbar">
+            <div class="nav-left">
+                <h2 class="navbar-heading">Employee Id</h2>
+            </div>
+            <!-- <div class="nav-right">
+                <div class="dropdown">
+                    <button class="dropbtn" onclick="navigateToHistory()">⋮</button>
+                    <span class="tooltip">History</span>
+                </div>
+            </div> -->
+        </nav>
+        <h1 class="heading1">Employee Id Card</h1>
+        <div>
+            <div class="card-container">
+                <div class="card">
+                    <div class="profile-pic-container">
+                        <div class="profile-pic">
+                          <img id="profileImage" src="https://via.placeholder.com/100" alt="Profile Picture" />
+                        </div>
+                    <div class="main-details">
+                        <h1 id="username">Employee Name</h1>
+                        <h3 id="designation">Designation</h3>
+                    </div>
+                    
+                </div>
+                <div class="Emp-details">
+                    <div>
+                        <span>EmpId</span>
+                        <span>:</span><span id="empId" style="padding-left: 10px;"></span>
+                    </div>
+                    <div>
+                        <span>Email</span>
+                        <span class="Span">:</span><span id="email" style="padding-left: 10px;"></span>
+                        
+                    </div>
+                    
+                    <div>
+                        <span>Phone</span>
+                        <span>:</span><span id="whatsAppNumber" style="padding-left: 10px;"></span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function getAuthToken() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'auth_token') {
+                        return decodeURIComponent(value);
+                    }
+                }
+                return null;
+            }
+        
+            async function fetchUserDetails() {
+                try {
+                    const token = getAuthToken();
+                    if (!token) {
+                        console.error('No authentication token found');
+                        return;
+                    }
+        
+                    console.log('Fetching user details');
+                    const response = await axios.get('http://127.0.0.1:8000/hr/api/user_details', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+        
+                    const userData = response.data;
+                    console.log('User Data:', userData);
+        
+                    // Update the profile page with user details
+                    document.getElementById("username").textContent = userData.username;
+                    document.getElementById("empId").textContent = userData.Emp_Id;
+                    document.getElementById("email").textContent = userData.email;
+                    document.getElementById("designation").textContent = userData.designation;
+                    document.getElementById("whatsAppNumber").textContent = userData.whats_up_number;        
+                    if (userData.user_image) {
+                        document.getElementById("profileImage").src = `data:image/jpeg;base64,${userData.user_image}`;
+                    }
+                } catch (error) {
+                    console.error('Error fetching user details:', error);
+                }
+            }
+        
+            // Initialize by fetching user details
+            fetchUserDetails();
+        });
+        </script>
+</body>
+</html>

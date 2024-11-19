@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Resumption Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 25px;
+            text-align: start;
+            margin-left: 10px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            background-color: #333;
+            color: white;
+        }
+
+        .navbar-heading {
+            font-size: 15px;
+            margin-left: 20px;
+        }
+
+        .nav-right,
+        .nav-left {
+            position: relative;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .form-select {
+            font-size: 13px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .heading1 {
+            text-align: start;
+            font-size: 15px;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            top: -5px;
+            right: 35px;
+            background-color: #555;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            z-index: 1;
+            font-size: 12px;
+        }
+
+        .nav-right:hover .tooltip {
+            display: block;
+        }
+
+        .input-field,
+        .select-field {
+            width: 100%;
+            padding: 10px 10px 10px 40px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            color: black;
+        }
+
+        .select-field {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>') no-repeat right 10px center;
+            background-size: 12px;
+        }
+
+        .input-field::placeholder {
+            color: black;
+        }
+
+        .icon {
+            position: absolute;
+            left: 10px;
+            top: 38px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 0.2rem;
+            margin-top: 0;
+
+
+        }
+
+        .input-field.error,
+        .select-field.error {
+            border-color: red;
+        }
+
+        .icon i {
+            color: black;
+            font-size: 14px;
+        }
+
+        .label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .save-button {
+            width: 20%;
+            padding: 10px;
+            border: none;
+            background-color: #0f0f0f;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: calc(50% - 55px);
+            margin-bottom: 20px;
+        }
+
+        #snackbar {
+            visibility: hidden;
+            width: 350px;
+            height: 50px;
+            margin-left: -125px;
+            background-color: green;
+            color: white;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+        }
+
+        #snackbar.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        #snackbar.error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        @-webkit-keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        .container {
+            height: 100%;
+            width: 50%;
+            background-color: white;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        .heading {
+            font-size: 15px;
+            text-align: start;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 0.1rem;
+        }
+
+        .col-12 {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            font-size: 13px;
+            padding: 8px 8px 8px 10px;
+        }
+
+        .mb-4 {
+            margin-bottom: 0.5rem !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 0.9rem !important;
+        }
+
+        .col-md-6 {
+            padding-bottom: 0.5rem;
+        }
+
+        .save-button {
+            margin-top: 0.5rem;
+        }
+
+        .space {
+
+            margin-top: -0.5rem;
+        }
+
+        #loading-overlay {
+            display: none;
+            /* Baaki properties same rahenge */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <nav class="navbar bg-dark text-white">
+            <div class="container-fluid">
+                <h2 class="navbar-heading">Employee Reimbursement</h2>
+                <div class="nav-right">
+                    <div class="dropdown">
+                        <button class="btn btn-link text-white" onclick="navigateToHistory()">⋮</button>
+                        <span class="tooltip">History</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <h1 class="mt-4">Employee Reimbursement Application</h1>
+        <form id="medical-form" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+
+            <div class="col">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Employee Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <input type="text" id="username" class="form-control" placeholder="Employee Name" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="emp_id" class="form-label">Employee ID</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                        <input type="text" id="emp_id" class="form-control" placeholder="Employee ID" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                        <input type="text" id="email" class="form-control" placeholder="Email" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="mb-3">
+                    <label for="group" class="form-label">Business Group</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        <input type="text" id="group" class="form-control" placeholder="Business Group">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col">
+                <div class="mb-3">
+                    <label for="department" class="form-label">Department</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        <input type="text" id="department" class="form-control" placeholder="Department" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="reimbursement_type" class="form-label">Reimbursement Type</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <select class="form-select" id="reimbursement_type">
+                            <option value="" selected disabled hidden>Select Reason</option>
+                            <option value="" selected disabled hidden>Reimbursement Type</option>
+                            <option value="Air Passing Recruitment">Air Passing Recruitment</option>
+                            <option value="Insurance Claim">Insurance Claim</option>
+                            <option value="Parking Fees">Parking Fees</option>
+                            <option value="Petrol Charges">Petrol Charges</option>
+                            <option value="Medical Fee Requirements">Medical Fee Requirements</option>
+                            <option value="Salary Fee">Salary Fee</option>
+                            <option value="School Fee">School Fee</option>
+                            <option value="Telephone Bill Claim">Telephone Bill Claim</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="enter_amount" class="form-label">Amount(AED)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                        <input type="text" id="enter_amount" class="form-control" placeholder="Amount(AED)">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="employeereimbursement_comment" class="form-label">Comment</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-bars"></i></span>
+                        <input type="text" id="employeereimbursement_comment" class="form-control"
+                            placeholder="Comment">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="mb-3">
+                    <label for="note" class="form-label">Note</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        <input type="text" id="note" class="form-control" placeholder="Comments">
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    <div class="col-12">
+        <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="your-csrf-token-here">
+        <button type="submit" class="btn btn-primary save-button">Apply</button>
+    </div>
+    </form>
+    <div id="snackbar">Application Sent Successfully</div>
+    <div id="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            function getAuthToken() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'auth_token') {
+                        return decodeURIComponent(value);
+                    }
+                }
+                return null;
+            }
+            const authToken = getAuthToken();
+            const apiBaseUrl = 'http://127.0.0.1:8000';
+            console.log("Authentication Token:", authToken);
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            async function sendAdminNotification(email) {
+                try {
+                    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    const response = await fetch(`${apiBaseUrl}/hr/api/send_admin_notification`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                            'Authorization': `Bearer ${authToken}`,
+                        },
+                        body: JSON.stringify({
+                            subject: 'Employee Reimbursement Application request',
+                            message: `Employee Reimbursement Application request by Employee with email ${email}.`,
+                            recipients: ['farhanabadubhai@gmail.com'],
+                        }),
+                    });
+
+                    if (response.ok) {
+                        console.log('Admin notification sent successfully');
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Failed to send admin notification:', errorText);
+                    }
+                } catch (error) {
+                    console.error('Error occurred while sending admin notification:', error.message);
+                }
+            }
+
+            async function fetchUserDetails() {
+                try {
+                    const response = await axios.get(`${apiBaseUrl}/hr/api/user_details`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+
+                    if (response.status === 200) {
+                        const data = response.data;
+                        document.getElementById('username').value = `${data.first_name} ${data.last_name}`;
+                        document.getElementById('emp_id').value = data.emp_id;
+                        document.getElementById('email').value = data.email;
+                        document.getElementById('department').value = data.department;
+                    } else {
+                        console.error('Failed to fetch user details:', response.data);
+                        showSnackbar('Failed to fetch user details', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error fetching user details:', error);
+                    showSnackbar('Error fetching user details', 'error');
+                }
+            }
+
+            fetchUserDetails();
+
+            const resumptionForm = document.getElementById('medical-form');
+            const loadingOverlay = document.getElementById('loading-overlay');
+
+            function validateForm() {
+                const requiredFields = [
+                    { id: 'username', message: 'Employee Name is required' },
+                    { id: 'emp_id', message: 'Employee ID is required' },
+                    { id: 'email', message: 'Email is required' },
+                    { id: 'department', message: 'Department is required' },
+                    { id: 'group', message: 'Business Group is required' },
+                    { id: 'enter_amount', message: 'Amount is required' },
+                    { id: 'reimbursement_type', message: 'Reimbursement Type is required' },
+                    { id: 'employeereimbursement_comment', message: 'Comment is required' },
+                    { id: 'note', message: 'Note is required' },
+                ];
+                let isValid = true;
+
+                requiredFields.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    if (!element.value.trim()) {
+                        isValid = false;
+                        element.classList.add('error');
+                        showError(element, field.message);
+                    } else {
+                        element.classList.remove('error');
+                        removeError(element);
+                    }
+                });
+
+                return isValid;
+            }
+
+            function showError(field, message) {
+                let errorElement = field.parentNode.querySelector('.error-message');
+                if (!errorElement) {
+                    errorElement = document.createElement('div');
+                    errorElement.className = 'error-message';
+                    field.parentNode.appendChild(errorElement);
+                }
+                errorElement.textContent = message;
+            }
+
+            function removeError(field) {
+                const errorElement = field.parentNode.querySelector('.error-message');
+                if (errorElement) {
+                    errorElement.remove();
+                }
+            }
+
+            resumptionForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                if (!validateForm()) {
+                    showSnackbar('Please fill all required fields', 'error');
+                    return;
+                }
+
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                loadingOverlay.style.display = 'flex';
+
+                const data = {
+                    username: document.getElementById('username').value,
+                    emp_id: document.getElementById('emp_id').value,
+                    email: document.getElementById('email').value,
+                    department: document.getElementById('department').value,
+                    group: document.getElementById('group').value,
+                    enter_amount: document.getElementById('enter_amount').value || null,
+                    reimbursement_type: document.getElementById('reimbursement_type').value || null,
+                    employeereimbursement_comment: document.getElementById('employeereimbursement_comment').value,
+                    note: document.getElementById('note').value,
+                };
+
+                Object.keys(data).forEach(key => data[key] === null && delete data[key]);
+
+                try {
+                    console.log('Sending data:', data);
+                    const response = await axios.post(`${apiBaseUrl}/hr/api/employee-reimbursement`, data, {
+                        headers: {
+                            "X-CSRFToken": csrftoken,
+                            'Authorization': `Bearer ${authToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                    });
+
+                    if (response.status === 200) {
+                        await sendAdminNotification(document.getElementById('email').value);
+                        clearNonFixedFields();
+                        console.log('Submitted Application:', response.data);
+                        showSnackbar('EmployeeReimbursement submitted successfully', 'success');
+                    } else {
+                        showSnackbar('EmployeeReimbursement submission failed', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error occurred:', error);
+                    if (error.response) {
+                        console.error('Response data:', error.response.data);
+                        console.error('Response status:', error.response.status);
+                        console.error('Response headers:', error.response.headers);
+                        showSnackbar(`Error: ${error.response.data.message || 'Unknown error occurred'}`, 'error');
+                    } else if (error.request) {
+                        console.error('No response received:', error.request);
+                        showSnackbar('No response received from server', 'error');
+                    } else {
+                        console.error('Error message:', error.message);
+                        showSnackbar('An error occurred while submitting the application', 'error');
+                    }
+                } finally {
+                    loadingOverlay.style.display = 'none';
+                }
+            });
+
+            function clearNonFixedFields() {
+                const fieldsToReset = [
+                    'enter_amount', 'note', 'group', 'reimbursement_type', 'employeereimbursement_comment'
+                ];
+
+                fieldsToReset.forEach(fieldId => {
+                    document.getElementById(fieldId).value = '';
+                });
+            }
+
+            function showSnackbar(message, type = 'success', duration = 3000) {
+                const snackbar = document.getElementById("snackbar");
+                snackbar.textContent = message;
+                snackbar.className = "show";
+                if (type === 'error') {
+                    snackbar.classList.add("error");
+                } else {
+                    snackbar.classList.remove("error");
+                }
+                setTimeout(function () {
+                    snackbar.className = snackbar.className.replace("show", "");
+                }, duration);
+            }
+
+            const requiredFields = [
+                { id: 'username', message: 'Employee Name is required' },
+                { id: 'emp_id', message: 'Employee ID is required' },
+                { id: 'email', message: 'Email is required' },
+                { id: 'department', message: 'Department is required' },
+                { id: 'group', message: 'Business Group is required' },
+                { id: 'enter_amount', message: 'Reason is required' },
+                { id: 'reimbursement_type', message: 'Type of claim is required' },
+                { id: 'amount_aed', message: 'Amount (AED) is required' },
+                { id: 'employeereimbursement_comment', message: 'Comments are required' },
+            ];
+            requiredFields.forEach(fieldId => {
+                const element = document.getElementById(fieldId);
+                element.addEventListener('blur', () => {
+                    if (!element.value.trim()) {
+                        element.classList.add('error');
+                        showError(element, `${element.placeholder} is required`);
+                    } else {
+                        element.classList.remove('error');
+                        removeError(element);
+                    }
+                });
+            });
+        });
+
+        function navigateToHistory() {
+            window.location.href = '/hr/EmpReimbursement/ReimbursementHistory';
+        }
+    </script>
+</body>
+
+</html>

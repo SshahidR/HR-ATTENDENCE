@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visiting Card History</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: start;
+            font-size: 30px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 40px;
+            background-color: #333;
+            color: white;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .navbar-heading {
+            margin-left: 20px;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+
+        .nav-right,
+        .nav-left {
+            position: relative;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .backbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: inherit;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .dropbtn i {
+            font-size: 18px;
+            color: white;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #555;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            z-index: 1;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .main {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-right:hover .tooltip {
+            display: block;
+        }
+
+        .navbar-heading {
+             font-size:15px;
+             margin-left: 20px;
+             font-weight: bold;
+         }
+         
+        .card {
+            width: 90%;
+            max-width: 500px;
+            min-height: 300px;
+            border-radius: 10px;
+            padding-top: 50px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: url("/static/images/visitingCard1.jpg") no-repeat center center;
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            position: relative;
+        }
+        .card2 {
+            width: 90%;
+            max-width: 500px;
+            min-height: 300px;
+            border-radius: 10px;
+            padding-top: 50px;
+            margin-top: 20px;
+            background: url("/static/images/v5.jpg") no-repeat center center;
+            background-size: cover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-position: center;
+            position: relative;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+        }
+
+        .Detail1 {
+            text-align: center;
+            margin-top: 5.5rem;
+        }
+
+        .Detail1 h5 {
+            margin-top: -1em;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: absolute;
+            bottom: 1.3rem;
+            left: 0;
+            right: 0;
+            padding: 0 5%;
+            font-size: 14px;
+        }
+
+        .contact-info>div {
+            margin: 0;
+        }
+
+        .contact-info p {
+            margin: 1px 0;
+            line-height: 2;
+        }
+
+        .contact-info-child {
+            flex: 1;
+            text-align: left;
+            padding-left: 0.5em;
+        }
+
+        #qrcode {
+            flex: 0 0 auto;
+            margin-right: 40px;
+            margin-left: 2rem;
+        }
+
+        .card-flex {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: end;
+            position: absolute;
+            bottom: 1.5rem;
+            left: 33%;
+        }
+
+        .card-flex i {
+            color: #000;
+        }
+
+        i {
+            color: #f6f2f2;
+        }
+
+        .divider {
+            height: 80%;
+            width: 1px;
+            background-color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                flex-direction: column;
+            }
+
+            .card,
+            .card2 {
+                width: 90%;
+                margin-bottom: 20px;
+            }
+
+            .divider {
+                display: none;
+            }
+        }
+        .heading{
+            text-align: center;
+            font-size: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="backbtn" onclick="navigateBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="nav-left">
+                <h2 class="navbar-heading">VisitingCard History</h2>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="dropdown">
+                <button class="dropbtn" onclick="navigateToEditPage()"><i class="fas fa-edit"></i></button>
+                <span class="tooltip">Edit</span>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn" onclick="shareToWhatsApp()"><i class="fas fa-share-alt"></i></button>
+            </div>
+        </div>
+    </nav>
+ 
+    <div class="main">
+        <div class="card">
+            <div class="card-flex">
+                <span><i class="fas fa-globe"></i></span>
+                <span>www.alyousuf.com</span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="card2">
+            <div class="Detail1">
+                <h3 id="username">Employee Name</h3>
+                <h5 id="designation">Designation</h5>
+            </div>
+            <div class="contact-info">
+                <div id="qrcode"></div>
+                <div class="contact-info-child">
+                    <div>
+                        <p><strong>P.O. Box </strong> <span id="poBox"></span>, <span id="country"></span> - <span
+                                id="unitedstate"></span></p>
+                    </div>
+                    <div>
+                        <p><strong>Tel:</strong> <span id="telphone"></span>, <strong>Ext:</strong> <span
+                                id="extnum"></span></p>
+                    </div>
+                    <div>
+                        <p><strong>Fax:</strong> <span id="faxnum"></span>, <strong>Mob:</strong> <span
+                                id="mobilenum"></span></p>
+                    </div>
+                    <div><span id="email"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function getAuthToken() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'auth_token') {
+                        return decodeURIComponent(value);
+                    }
+                }
+                return null;
+            }
+
+            async function fetchUserDetails() {
+                try {
+                    const token = getAuthToken();
+                    if (!token) {
+                        throw new Error('No authentication token found');
+                    }
+
+                    console.log('Fetching user details');
+                    const response = await axios.get('http://127.0.0.1:8000/hr/api/visiting-card-get', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    const userData = response.data;
+                    console.log('User Data:', userData);
+
+                    // Store the visiting card ID
+                    localStorage.setItem('visitingCardId', userData.id);
+
+                    // Update the profile page with user details
+                    document.getElementById("username").textContent = userData.username;
+                    document.getElementById("designation").textContent = userData.designation;
+                    document.getElementById("email").textContent = userData.email;
+                    document.getElementById("mobilenum").textContent = userData.mobilenum;
+                    document.getElementById("poBox").textContent = userData.poBox;
+                    document.getElementById("country").textContent = userData.country;
+                    document.getElementById("unitedstate").textContent = userData.unitedstate;
+                    document.getElementById("telphone").textContent = userData.telphone;
+                    document.getElementById("extnum").textContent = userData.extnum;
+                    document.getElementById("faxnum").textContent = userData.faxnum;
+
+                    // Generate QR code
+                    generateQRCode(userData);
+
+                } catch (error) {
+                    console.error('Error fetching user details:', error);
+                    alert('Failed to load user details. Please try again later.');
+                }
+            }
+
+            function generateQRCode(userData) {
+                const qrContainer = document.getElementById("qrcode");
+                qrContainer.innerHTML = ''; // Clear previous QR code
+
+                // Format data as a vCard
+                const vCard = `BEGIN:VCARD
+VERSION:3.0
+FN:${userData.username}
+ORG:${userData.designation}
+TEL;TYPE=WORK,VOICE:${userData.telphone}
+TEL;TYPE=CELL,VOICE:${userData.mobilenum}
+EMAIL:${userData.email}
+ADR;TYPE=WORK:;;${userData.poBox};${userData.country};${userData.unitedstate}
+END:VCARD`;
+
+                const canvas = document.createElement('canvas');
+                qrContainer.appendChild(canvas);
+
+                new QRious({
+                    element: canvas,
+                    value: vCard,
+                    size: 140,
+                    backgroundAlpha: 0,
+                    foreground: '#333333',
+                    level: 'H'
+                });
+
+
+
+                // If you want to add a logo to the QR code:
+                setTimeout(() => {
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    img.onload = function () {
+                        const logoSize = canvas.width * 0.6;
+                        const logoX = (canvas.width - logoSize) / 5;
+                        const logoY = (canvas.height - logoSize) / 5;
+                        ctx.drawImage(img, logoX, logoY, logoSize, logoSize);
+                    };
+                }, 100);
+            }
+
+            // Initialize by fetching user details
+            fetchUserDetails();
+        });
+
+        function navigateToEditPage() {
+            // Get the current user data
+            const username = document.getElementById("username").textContent;
+            const designation = document.getElementById("designation").textContent;
+            const email = document.getElementById("email").textContent;
+            const mobilenum = document.getElementById("mobilenum").textContent;
+            const poBox = document.getElementById("poBox").textContent;
+            const country = document.getElementById("country").textContent;
+            const unitedstate = document.getElementById("unitedstate").textContent;
+            const telphone = document.getElementById("telphone").textContent;
+            const extnum = document.getElementById("extnum").textContent;
+            const faxnum = document.getElementById("faxnum").textContent;
+
+            // Get the visiting card ID
+            const visitingCardId = localStorage.getItem('visitingCardId');
+
+            // Construct the URL with query parameters
+            const editPageUrl = `/hr/Visiting/visitingCardEdit?id=${encodeURIComponent(visitingCardId)}&username=${encodeURIComponent(username)}&designation=${encodeURIComponent(designation)}&email=${encodeURIComponent(email)}&mobilenum=${encodeURIComponent(mobilenum)}&poBox=${encodeURIComponent(poBox)}&country=${encodeURIComponent(country)}&unitedstate=${encodeURIComponent(unitedstate)}&telphone=${encodeURIComponent(telphone)}&extnum=${encodeURIComponent(extnum)}&faxnum=${encodeURIComponent(faxnum)}`;
+
+            // Navigate to the edit page
+            window.location.href = editPageUrl;
+        }
+
+        function navigateBack() {
+            window.history.back();
+        }
+
+        function navigateToHistory() {
+            // Implement navigation to history logic here
+            console.log('Navigating to history');
+        }
+
+        function shareToWhatsApp() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (canvas) {
+                canvas.toBlob(function (blob) {
+                    const file = new File([blob], "qrcode.png", { type: "image/png" });
+                    const filesArray = [file];
+                    const shareText = 'Scan this QR code to view my visiting card details.';
+
+                    if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+                        navigator.share({
+                            files: filesArray,
+                            title: 'My Visiting Card QR Code',
+                            text: shareText
+                        })
+                            .then(() => console.log('Share was successful.'))
+                            .catch((error) => console.log('Sharing failed', error));
+                    } else {
+                        const imageUrl = canvas.toDataURL('image/png');
+                        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + '\n\n' + imageUrl)}`;
+                        window.open(whatsappUrl, '_blank');
+                    }
+                });
+            } else {
+                console.log("QR code not found");
+                alert("QR code not found. Please ensure the visiting card details are loaded.");
+            }
+        }
+
+    </script>
+</body>
+
+</html>

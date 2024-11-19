@@ -1,0 +1,219 @@
+
+POST https://attendancehr.onrender.com/api/login 
+Content-Type: application/json
+
+{ "username": "farhannn", "password": "farhana123" }
+
+
+###
+
+POST https://attendancehr.onrender.com/api/signup
+Content-Type: application/json
+
+{
+  "username": "Shahid",
+  "email": "shahid@gmail.com",
+  "password": "shahid123",  
+  "empId": "sh1402"
+
+}
+
+###
+
+# POST http://127.0.0.1:8000/signup 
+# Content-Type: application/json
+
+# { "username": "Ali", "password": "Ali123", "email": "Ali123@mail.com" }
+
+
+###
+
+# POST http://127.0.0.1:8000/api/signup
+# Content-Type: application/json
+
+# {
+#   "username": "Shahid",
+#   "email": "shahid@gmail.com",
+#   "password": "shahid123",  
+#   "empId": "sh1402"
+
+# }
+POST http://127.0.0.1:8000/api/signup
+Content-Type: application/json
+
+{
+  "username": "Zain",
+  "email": "zain@gmail.com",
+  "password": "zain123",
+  "empId": "zn1402",
+  "image_data": "base64_encoded_image_data_here"
+}
+
+
+###
+### Register User and Detect Faces
+POST http://127.0.0.1:8000/api/register
+Content-Type: application/json
+
+{
+  "username": "Far",
+  "password": "far123"
+}
+
+
+
+###
+
+POST  http://127.0.0.1:8000/api/login
+Content-Type: application/json
+
+{ "username": "F170888", "password": "farr123" }
+
+
+###
+POST http://127.0.0.1:8000/api/logout
+Content-Type: application/json
+Authorization: Bearer ade51e83c96168f53770b090fc5478b06d229d7a
+
+
+
+###
+POST https://attendancehr.onrender.com/api/login
+Content-Type: application/json
+
+{ "username": "Shahid", "password": "shahid123" }
+
+###
+GET  http://127.0.0.1:8000/api/user-details
+Content-Type: application/json
+Authorization: Bearer cf76cb1972074201bedcbf430ce630f8446b0dc3
+
+###
+
+GET https://attendancehr.onrender.com/api/user-details
+Content-Type: application/json
+Authorization: Bearer 6066322e9a7ed2e2f82af7c3e90a96c6d5a5fde2
+
+
+
+
+
+
+
+# ###
+# POST http://127.0.0.1:8000/signup 
+# Content-Type: application/json
+
+# { "username": "shahid", "password": "shahid123", "email": "shahid123@mail.com" }
+
+###
+POST http://127.0.0.1:8000/api/attendance/checkin
+Content-Type: application/json
+Authorization: Bearer 61bf1c59530b0bb27bd2fd81ba2a7d3d44d5e1d9
+
+
+###
+
+POST https://attendancehr.onrender.com/api/attendance/checkin
+Content-Type: application/json
+Authorization: Bearer 6066322e9a7ed2e2f82af7c3e90a96c6d5a5fde2
+
+
+
+###
+
+POST http://attendancehr.onrender.com/api/attendance/checkout
+Content-Type: application/json
+Authorization: Bearer 6066322e9a7ed2e2f82af7c3e90a96c6d5a5fde2
+
+
+
+
+###
+
+POST http://127.0.0.1:8000/api/attendance/checkout
+Content-Type: application/json
+Authorization: Bearer 61bf1c59530b0bb27bd2fd81ba2a7d3d44d5e1d9
+
+
+###
+
+
+GET http://127.0.0.1:8000/api/attendance/checkin/latest
+Content-Type: application/json"
+Authorization: Bearer 8f2332c85a32b210ad640f97a263076b8afa5378
+
+###
+GET http://attendancehr.onrender.com/api/attendance/checkin/latest
+Content-Type: application/json"
+Authorization: Bearer bd8cd6b79fa89c2fe1f93f18d681a4c95436098e
+
+
+
+
+###
+GET http://127.0.0.1:8000/api/attendance/checkout/latest
+Content-Type: application/json"
+Authorization: Bearer 8f2332c85a32b210ad640f97a263076b8afa5378
+
+
+###
+
+GET http://attendancehr.onrender.com/api/attendance/checkout/latest
+Content-Type: application/json"
+Authorization: Bearer bd8cd6b79fa89c2fe1f93f18d681a4c95436098e
+
+
+###
+
+GET http://attendancehr.onrender.com/api/attendance/all
+Content-Type: application/json"
+
+###
+GET http://127.0.0.1:8000/api/attendance/all
+Content-Type: application/json"
+
+###
+GET http://127.0.0.1:8000/api/attendance/me
+Content-Type: application/json"
+Authorization: Bearer 8f2332c85a32b210ad640f97a263076b8afa5378
+
+
+###
+GET http://attendancehr.onrender.com/api/attendance/me
+Content-Type: application/json"
+Authorization: Bearer bd8cd6b79fa89c2fe1f93f18d681a4c95436098e
+
+
+
+
+
+
+###
+
+POST http://127.0.0.1:8000/api/login
+Content-Type: application/json
+
+{ "username": "john", "password": "john123" }
+
+
+###
+
+POST http://127.0.0.1:8000/api/attendance/checkin
+Content-Type: application/json
+Authorization: Bearer 780afe146a18ec354c6de1f0421de12c088c4497
+
+
+
+###
+
+POST http://127.0.0.1:8000/api/attendance/checkout
+Content-Type: application/json
+Authorization: Bearer 780afe146a18ec354c6de1f0421de12c088c4497
+
+
+
+###
+GET http://127.0.0.1:8000/api/attendance/me
+Content-Type: application/json
+Authorization: Bearer 780afe146a18ec354c6de1f0421de12c088c4497
